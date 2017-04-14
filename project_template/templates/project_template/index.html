@@ -5,28 +5,30 @@
     </head>
     
     <body>
-        <!-- TODO: Please change lines 10 and 11 according to your actual project name and student names-->
-        <div class="topcorner">
-            <p>NBA Draft Prediction</p>
-            <p>Eric Ma (exm2), Jason Liao (jtl93), Nikita Dubnov (nd296), Trevor McDonald (tdm67)</p>
-        </div>
+        <img class="top-image" src="/static/images/big_board.png">
         
         <form class="form-inline global-search" method='GET'>
-            <h1 style="font-size: 55px; font-family:Futura; color: #4285F4">
-                C
-                <font color=#EA4335>S</font>
-                <font color=#FBBC05>4</font>
-                3
-                <font color=#34A853>0</font>
-                <font color=#EA4335>0</font>
+            <h1 class="project-name">
+                NBA Draft
+                <font color=#ED174B>Prediction</font>
             </h1>
+            <br>
+            <h6 class="team-members">Eric Ma (exm2), Jason Liao (jtl93), Nikita Dubnov (nd296), Trevor McDonald (tdm67)</h6>
             
             <br><br>
             
             <div class="form-group">
                 <input id="input" type="text" name="search" class="form-control" placeholder="Your Input">
-            </div>
-            <button type="submit" class="btn btn-info"> Go! </button>
+                <select name="positions">
+                    <option value="any">Any Position</option>
+                    <option value="pg">Point Guard</option>
+                    <option value="sg">Shooting Guard</option>
+                    <option value="sf">Small Forward</option>
+                    <option value="pf">Power Forward</option>
+                    <option value="c">Center</option>
+                  </select>
+              </div>
+            <button type="submit" class="btn btn-info"> Find Players! </button>
         </form>
         
         <div class="form-inline global-search">
@@ -34,6 +36,8 @@
             {% for line in output %}
                 {{line}}<br>
             {% endfor %}
+            <br>
+            {{pos}}
             
             <div class="pagination">
                 <span class="step-links">
@@ -52,5 +56,6 @@
                 </span>
             </div>
         </div>
+        <img class="footer-image" src="/static/images/footer_image.jpg">
     </body>
 </html>
