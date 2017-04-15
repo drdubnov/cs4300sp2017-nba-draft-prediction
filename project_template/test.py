@@ -21,16 +21,17 @@ prospect_to_position = json.load(open(os.path.join(BASE_DIR, "data", "prospect_t
 player_to_position = json.load(open(os.path.join(BASE_DIR, "data","curr_player_to_position.json")))
 
 ind_to_prospect = json.load(open(os.path.join(BASE_DIR, "data", "ind_to_prospect.json")))
-prospect_to_ind = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_ind.json")))
+#prospect_to_ind = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_ind.json")))
 ind_to_player = json.load(open(os.path.join(BASE_DIR, "data", "ind_to_player.json")))
 #player_to_ind = json.load(open(os.path.join(BASE_DIR, "project_template", "data", "player_to_ind.json")))
 
 tfidf = pickle.load(open(os.path.join(BASE_DIR, "data", 'model.pkl')))
 
 
-def find_similar_players(prospect, k=2):
-    prospect_position = prospect_to_position[prospect]
-    prospect_ind = prospect_to_ind[prospect]
+def find_similar_players(prospect_ind, k=2):
+	prospect_name = ind_to_prospect[prospect_ind]
+    prospect_position = prospect_to_position[prospect_name]
+    #prospect_ind = prospect_to_ind[prospect]
     prospect_doc = prospect_docs[prospect_ind]
     sims = []
     for ind, row in enumerate(player_docs):
@@ -56,6 +57,6 @@ def find_similar(q, pos):
 			if not np.all(doc == 0.0):
 				dotted = np.dot(doc, transformed)
 				sim = dotted/(np.linalg.norm(doc)*np.linalg.norm(transformed))
-				sims.append((prosp, sim, find_similar_players(prosp)))
+				sims.append((prosp, sim, find_similar_players(ind)))
 	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
 	return sorted_sims
