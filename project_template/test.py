@@ -14,18 +14,18 @@ def read_json(n):
 	json_file = json.load(file)
 	return json_file
 
-prospect_docs = pickle.load(open(os.path.join(BASE_DIR, "project_template", "data", 'prospects.pkl'))).toarray()
-player_docs = pickle.load(open(os.path.join(BASE_DIR, "project_template", "data", 'players.pkl'))).toarray()
+prospect_docs = pickle.load(open(os.path.join(BASE_DIR, "data", 'prospects.pkl'))).toarray()
+player_docs = pickle.load(open(os.path.join(BASE_DIR, "data", 'players.pkl'))).toarray()
 
-prospect_to_position = json.load(open(os.path.join(BASE_DIR, "project_template", "data", "prospect_to_position.json")))
-player_to_position = json.load(open(os.path.join(BASE_DIR, "project_template", "data","curr_player_to_position.json")))
+prospect_to_position = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_position.json")))
+player_to_position = json.load(open(os.path.join(BASE_DIR, "data","curr_player_to_position.json")))
 
-ind_to_prospect = json.load(open(os.path.join(BASE_DIR, "project_template", "data", "ind_to_prospect.json")))
-prospect_to_ind = json.load(open(os.path.join(BASE_DIR, "project_template", "data", "prospect_to_ind.json")))
-ind_to_player = json.load(open(os.path.join(BASE_DIR, "project_template", "data", "ind_to_player.json")))
+ind_to_prospect = json.load(open(os.path.join(BASE_DIR, "data", "ind_to_prospect.json")))
+prospect_to_ind = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_ind.json")))
+ind_to_player = json.load(open(os.path.join(BASE_DIR, "data", "ind_to_player.json")))
 #player_to_ind = json.load(open(os.path.join(BASE_DIR, "project_template", "data", "player_to_ind.json")))
 
-tfidf = pickle.load(open(os.path.join(BASE_DIR, "project_template", "data", 'model.pkl')))
+tfidf = pickle.load(open(os.path.join(BASE_DIR, "data", 'model.pkl')))
 
 
 def find_similar_players(prospect, k=2):
