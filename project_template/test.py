@@ -4,51 +4,46 @@ import json
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 import pickle
+import re
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-
-def read_json(n):
-	path = Docs.objects.get(id = n).address
-	file = open(path)
-	json_file = json.load(file)
-	return json_file
 
 prospect_docs = pickle.load(open(os.path.join(BASE_DIR, "data", 'prospects.pkl'))).toarray()
 player_docs = pickle.load(open(os.path.join(BASE_DIR, "data", 'players.pkl'))).toarray()
 
 prospect_to_position = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_position.json")))
-player_to_position = json.load(open(os.path.join(BASE_DIR, "data","curr_player_to_position.json")))
+player_to_position = json.load(open(os.path.join(BASE_DIR, "data","player_to_position.json")))
 
 ind_to_prospect = json.load(open(os.path.join(BASE_DIR, "data", "ind_to_prospect.json")))
 #prospect_to_ind = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_ind.json")))
 ind_to_player = json.load(open(os.path.join(BASE_DIR, "data", "ind_to_player.json")))
-#player_to_ind = json.load(open(os.path.join(BASE_DIR, "project_template", "data", "player_to_ind.json")))
+#player_to_ind = json.load(open(os.path.join(BASE_DIR, "data", "player_to_ind.json")))
 
 tfidf = pickle.load(open(os.path.join(BASE_DIR, "data", 'model.pkl')))
 
 
 def find_similar_players(prospect_ind, k=2):
-	prospect_name = ind_to_prospect[prospect_ind]
-    prospect_position = prospect_to_position[prospect_name]
-    #prospect_ind = prospect_to_ind[prospect]
-    prospect_doc = prospect_docs[prospect_ind]
-    sims = []
-    for ind, row in enumerate(player_docs):
-        name = ind_to_player[str(ind)]
-        position = player_to_position[name]
-        if position in prospect_position:
-            doc = row.flatten()
-            if not np.all(doc == 0.0):
-                dotted = np.dot(doc, prospect_doc)
-                sim = dotted/(np.linalg.norm(doc)*np.linalg.norm(prospect_doc))
-                sims.append((name, sim))
-    sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
-    return sorted_sims[:k]
+	prospect_name = ind_to_prospect[str(prospect_ind)]
+	prospect_position = prospect_to_position[prospect_name]
+	prospect_doc = prospect_docs[prospect_ind]
+	sims = []
+	for ind, row in enumerate(player_docs):
+	    name = ind_to_player[str(ind)]
+	    position = player_to_position[name]
+	    if not set(position).isdisjoint(prospect_position):
+	        doc = row.flatten()
+	        if not np.all(doc == 0.0):
+	            dotted = np.dot(doc, prospect_doc)	
+	            sim = dotted/(np.linalg.norm(doc)*np.linalg.norm(prospect_doc))
+	            sims.append((name, sim))
+	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
+	return sorted_sims[:k]
 
 
 def find_similar(q, pos):
 	transformed = tfidf.transform([q]).toarray().flatten()
+	if np.all(transformed == 0.0):
+		return ["Query is out of vocabulary"]
 	sims = []
 	for ind, row in enumerate(prospect_docs):
 		prosp = ind_to_prospect[str(ind)]
@@ -57,6 +52,7 @@ def find_similar(q, pos):
 			if not np.all(doc == 0.0):
 				dotted = np.dot(doc, transformed)
 				sim = dotted/(np.linalg.norm(doc)*np.linalg.norm(transformed))
-				sims.append((prosp, sim, find_similar_players(ind)))
+				if sim > 0.0:
+					sims.append((prosp, sim, find_similar_players(ind)))
 	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
 	return sorted_sims
