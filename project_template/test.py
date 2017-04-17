@@ -5,11 +5,16 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 import pickle
 import re
+from scipy import io
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-prospect_docs = pickle.load(open(os.path.join(BASE_DIR, "data", 'prospects.pkl'))).toarray()
-player_docs = pickle.load(open(os.path.join(BASE_DIR, "data", 'players.pkl'))).toarray()
+# prospect_docs = io.mmread(os.path.join(BASE_DIR, "data", 'prospects.mtx')).toarray()
+# player_docs = io.mmread(os.path.join(BASE_DIR, "data", 'players.mtx')).toarray()
+
+tfidf = pickle.load(open(os.path.join(BASE_DIR, "data", 'model2.pkl')))
+prospect_docs = pickle.load(open(os.path.join(BASE_DIR, "data", 'prospects2.pkl'))).toarray()
+player_docs = pickle.load(open(os.path.join(BASE_DIR, "data", 'players2.pkl'))).toarray()
 
 prospect_to_position = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_position.json")))
 player_to_position = json.load(open(os.path.join(BASE_DIR, "data","player_to_position.json")))
@@ -19,7 +24,7 @@ ind_to_prospect = json.load(open(os.path.join(BASE_DIR, "data", "ind_to_prospect
 ind_to_player = json.load(open(os.path.join(BASE_DIR, "data", "ind_to_player.json")))
 #player_to_ind = json.load(open(os.path.join(BASE_DIR, "data", "player_to_ind.json")))
 
-tfidf = pickle.load(open(os.path.join(BASE_DIR, "data", 'model.pkl')))
+
 
 
 def find_similar_players(prospect_ind, k=2):
