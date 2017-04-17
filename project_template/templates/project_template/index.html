@@ -15,6 +15,7 @@
             <br>
             <h6 class="team-members">Eric Ma (exm2), Jason Liao (jtl93), Nikita Dubnov (nd296), Trevor McDonald (tdm67)</h6>
             
+            <h4>Enter a text query to describe a certain prospect in the 2017 NBA Draft.</h4>
             <br><br>
             
             <div class="form-group">
@@ -32,12 +33,18 @@
         </form>
         
         <div class="form-inline global-search">
-            <h4>Output</h4><br>
+            <h4>Output for {{pos}}</h4><br>
             {% for line in output %}
-                {{line}}<br>
+                <div class="player-row">
+                    {{line.0}}
+                    <br>
+                    Query Score: {{line.1}}
+                    <br>
+                    {{line.2}}
+                </div>
+                <br>
             {% endfor %}
             <br>
-            {{pos}}
             
             <div class="pagination">
                 <span class="step-links">

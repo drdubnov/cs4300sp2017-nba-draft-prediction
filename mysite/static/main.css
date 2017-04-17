@@ -69,3 +69,12 @@ body {
     color: orange;
     font-family:Futura;
 }
+
+.player-row {
+	background-color: lightsalmon;
+	    border-radius: 50px;
+    border: 1px solid blue;
+    padding: 20px;
+    width: 90%;
+    margin: 10px;
+}
