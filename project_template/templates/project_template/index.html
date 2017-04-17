@@ -10,7 +10,7 @@
         <form class="form-inline global-search" method='GET'>
             <h1 class="project-name">
                 NBA Draft
-                <font color=#ED174B>Prediction</font>
+                <font color="#ED174B">Prediction</font>
             </h1>
             <br>
             <h6 class="team-members">Eric Ma (exm2), Jason Liao (jtl93), Nikita Dubnov (nd296), Trevor McDonald (tdm67)</h6>
@@ -19,8 +19,8 @@
             <br><br>
             
             <div class="form-group">
-                <input id="input" type="text" name="search" class="form-control" placeholder="Your Input">
-                <select name="positions">
+                <input id="input" type="text" name="search" class="form-control" placeholder="Describe a player">
+                <select name="positions" class="position-selector">
                     <option value="any">Any Position</option>
                     <option value="pg">Point Guard</option>
                     <option value="sg">Shooting Guard</option>
@@ -36,24 +36,27 @@
             <h4>Output for {{pos}}</h4><br>
             {% for line in output %}
                 <div class="player-row">
-                    {{line.0}}
-                    <br>
-                    Query Score: {{line.1}}
-                    <br>
-                    {{line.2}}
+                    <img src="/static/images/blank.jpg" class="result-image">
+                    <div class="player-row-content">
+                        <h3>{{line.0}}</h3>
+                        <br>
+                        Query Score: {{line.1}}
+                        <br>
+                        {{line.2}}
+                    </div>
                 </div>
                 <br>
             {% endfor %}
             <br>
             
-            <div class="pagination">
+            <!-- <div class="pagination">
                 <span class="step-links">
                     {% if output.has_previous %}
                     <a href= "{{magic_url}}&page={{ output.previous_page_number }}">previous</a>
                     {% endif %}
                     
                     <!-- Showing the page numbers in Html Page -->
-                    <span class="current">
+                    <!--<span class="current">
                     Page _{{ output.number }}_ of _{{ output.paginator.num_pages }}_
                     </span>
                     
@@ -61,7 +64,7 @@
                     <a href= "{{magic_url}}&page={{ output.next_page_number }}">next</a>
                     {% endif %}
                 </span>
-            </div>
+            </div> -->
         </div>
         <img class="footer-image" src="/static/images/footer_image.jpg">
     </body>
