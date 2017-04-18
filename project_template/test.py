@@ -12,22 +12,23 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # prospect_docs = io.mmread(os.path.join(BASE_DIR, "data", 'prospects.mtx')).toarray()
 # player_docs = io.mmread(os.path.join(BASE_DIR, "data", 'players.mtx')).toarray()
 
-tfidf = pickle.load(open(os.path.join(BASE_DIR, "data", 'model2.pkl')))
-prospect_docs = pickle.load(open(os.path.join(BASE_DIR, "data", 'prospects2.pkl'))).toarray()
-player_docs = pickle.load(open(os.path.join(BASE_DIR, "data", 'players2.pkl'))).toarray()
+tfidf = pickle.load(open(os.path.join(BASE_DIR, "data", 'model.pkl')))
+prospect_docs = pickle.load(open(os.path.join(BASE_DIR, "data", 'prospects.pkl'))).toarray()
+player_docs = pickle.load(open(os.path.join(BASE_DIR, "data", 'players.pkl'))).toarray()
 
 prospect_to_position = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_position.json")))
 player_to_position = json.load(open(os.path.join(BASE_DIR, "data","player_to_position.json")))
 
 ind_to_prospect = json.load(open(os.path.join(BASE_DIR, "data", "ind_to_prospect.json")))
-#prospect_to_ind = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_ind.json")))
 ind_to_player = json.load(open(os.path.join(BASE_DIR, "data", "ind_to_player.json")))
+
+#prospect_to_ind = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_ind.json")))
 #player_to_ind = json.load(open(os.path.join(BASE_DIR, "data", "player_to_ind.json")))
 
 
 
 
-def find_similar_players(prospect_ind, k=2):
+def find_similar_players(prospect_ind, k=3):
 	prospect_name = ind_to_prospect[str(prospect_ind)]
 	prospect_position = prospect_to_position[prospect_name]
 	prospect_doc = prospect_docs[prospect_ind]
