@@ -12,10 +12,23 @@ def index(request):
     output_list = ''
     output=''
     position = ''
+    search = ''
     if request.GET.get('search'):
         search = request.GET.get('search')
-        position = request.GET.get('positions')
-        output_list = find_similar(search, position)
+        short_pos = request.GET.get('positions')
+        if short_pos == "any":
+            position = "Output for Players of Any Position"
+        elif short_pos == "pg":
+            position = "Output for Point Guards"
+        elif short_pos == "sg":
+            rposition = "Output for Shooting Guards"
+        elif short_pos == "sf":
+            position = "Output for Small Forwards"
+        elif short_pos == "pf":
+            position = "Output for Power Forwards"
+        elif short_pos == "c":
+            position = "Output for Centers"
+        output_list = find_similar(search, short_pos)
         paginator = Paginator(output_list, 10)
         page = request.GET.get('page')
         try:
@@ -27,5 +40,8 @@ def index(request):
     return render_to_response('project_template/index.html', 
                           {'output': output,
                            'pos': position,
+                           'search': '"' + search + '"',
                            'magic_url': request.get_full_path(),
                            })
+
+    

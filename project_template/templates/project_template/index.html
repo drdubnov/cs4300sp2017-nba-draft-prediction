@@ -33,7 +33,8 @@
         </form>
         
         <div class="form-inline global-search">
-            <h4>Output for {{pos}}</h4><br>
+            <h4>{{pos}}</h4><br>
+            <h5><i>{{search}}</i></h5><br><br>
             {% for line in output %}
                 <div class="player-row">
                     <img src="/static/images/player_images/{{line.3}}" class="result-image">
