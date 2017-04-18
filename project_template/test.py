@@ -53,8 +53,8 @@ def find_similar(q, pos):
 	sims = []
 	for ind, row in enumerate(prospect_docs):
 		prosp = ind_to_prospect[str(ind)]
-		prosp_image = prospect_to_image[prosp]
 		if pos == "any" or pos.upper() in prospect_to_position[prosp]:
+			prosp_image = prospect_to_image[prosp]
 			doc = row.flatten()
 			if not np.all(doc == 0.0):
 				dotted = np.dot(doc, transformed)
