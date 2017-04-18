@@ -36,13 +36,18 @@
             <h4>Output for {{pos}}</h4><br>
             {% for line in output %}
                 <div class="player-row">
-                    <img src="/static/images/blank.jpg" class="result-image">
+                    <img src="/static/images/player_images/{{line.3}}" class="result-image">
                     <div class="player-row-content">
                         <h3>{{line.0}}</h3>
                         <br>
                         Query Score: {{line.1}}
                         <br>
-                        {{line.2}}
+                        <h5>Similar NBA Players:</h5>
+                        <br>
+                        {% for simplayer in line.2 %}
+                            {{simplayer.0}} - {{simplayer.1}}
+                            <br>
+                        {% endfor %}
                     </div>
                 </div>
                 <br>

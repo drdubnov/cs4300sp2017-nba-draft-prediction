@@ -75,9 +75,13 @@ body {
 	background-color: #ED174B;
 	color: white;
     border: 2px solid blue;
-    width: 80%;
+    width: 60%;
     margin: 10px;
     box-shadow: 5px 5px 5px #888888;
+}
+
+.player-row h3 {
+	margin-top: 0px;
 }
 
 .player-row-content {
@@ -86,8 +90,7 @@ body {
 
 .result-image {
 	float: left;
-	height: 150px;
-	width: 150px;
+	width: 300px;
 }
 
 .position-selector {
