@@ -25,7 +25,7 @@ ind_to_player = json.load(open(os.path.join(BASE_DIR, "data", "ind_to_player.jso
 #prospect_to_ind = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_ind.json")))
 #player_to_ind = json.load(open(os.path.join(BASE_DIR, "data", "player_to_ind.json")))
 
-
+prospect_to_image = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_image.json")))
 
 
 def find_similar_players(prospect_ind, k=3):
@@ -53,12 +53,13 @@ def find_similar(q, pos):
 	sims = []
 	for ind, row in enumerate(prospect_docs):
 		prosp = ind_to_prospect[str(ind)]
+		prosp_image = prospect_to_image[prosp]
 		if pos == "any" or pos.upper() in prospect_to_position[prosp]:
 			doc = row.flatten()
 			if not np.all(doc == 0.0):
 				dotted = np.dot(doc, transformed)
 				sim = dotted/(np.linalg.norm(doc)*np.linalg.norm(transformed))
 				if sim > 0.0:
-					sims.append((prosp, sim, find_similar_players(ind)))
+					sims.append((prosp, sim, find_similar_players(ind), prosp_image))
 	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
 	return sorted_sims
