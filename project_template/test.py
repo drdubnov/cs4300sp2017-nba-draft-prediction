@@ -4,13 +4,8 @@ import json
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 import pickle
-import re
-from scipy import io
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-# prospect_docs = io.mmread(os.path.join(BASE_DIR, "data", 'prospects.mtx')).toarray()
-# player_docs = io.mmread(os.path.join(BASE_DIR, "data", 'players.mtx')).toarray()
 
 tfidf = pickle.load(open(os.path.join(BASE_DIR, "data", 'model.pkl')))
 prospect_docs = pickle.load(open(os.path.join(BASE_DIR, "data", 'prospects.pkl'))).toarray()
