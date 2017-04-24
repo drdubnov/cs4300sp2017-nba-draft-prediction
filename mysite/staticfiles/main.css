@@ -37,6 +37,10 @@ body {
 }
 
 /* New CSS for NBA project*/
+.top-banner {
+	background: url(/images/big_board.png);
+}
+
 .top-image {
 	width: 100%;
 	-webkit-filter: grayscale(50%); /* Safari */
@@ -80,7 +84,7 @@ body {
     box-shadow: 5px 5px 5px #888888;
 }
 
-.player-row h1 {
+.player-row h3 {
 	margin-top: 0px;
 }
 
@@ -90,6 +94,7 @@ body {
 
 .result-image {
 	float: left;
+	width: 340px;
 }
 
 .position-selector {

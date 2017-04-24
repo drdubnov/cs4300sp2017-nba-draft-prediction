@@ -37,12 +37,10 @@ body {
 }
 
 /* New CSS for NBA project*/
-.top-image {
-	width: 100%;
-	-webkit-filter: grayscale(50%); /* Safari */
-    filter: grayscale(20%);
-    filter: brightness(60%);
-    position: relative;
+.top-banner {
+	background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 59%, rgba(0, 0, 0, 0.65) 100%), url('/static/images/big_board.png') no-repeat;
+	background-size: cover;
+	height: 400px;
 }
 
 .footer-image {
@@ -55,20 +53,19 @@ body {
     text-align: left;
     top: 300px;
     left: 30px;
-    text-shadow: 2px 2px 2px white;
-    font-size: 55px;
-    font-family:Futura;
+    text-shadow: 1px 1px 2px white;
+    font-size: 37px;
     color: #006BB7;
+    overflow-x: none; 
 }
 
 .team-members {
 	position: absolute;
     text-align: left;
-    top: 380px;
+    top: 350px;
     left: 30px;
     color: white;
     text-shadow: 2px 2px 2px gray;
-    font-family: Futura;
 }
 
 .player-row {
