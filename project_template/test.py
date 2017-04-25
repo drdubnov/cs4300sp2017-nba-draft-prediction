@@ -45,7 +45,7 @@ def find_similar_players(prospect_ind, k=3):
 	return sorted_sims[:k]
 
 
-def find_similar(q, pos, num_keywords=5, num_sentences=3):
+def find_similar(q, pos, version, num_keywords=5, num_sentences=3):
 	transformed = tfidf.transform([q]).toarray().flatten()
 	if np.all(transformed == 0.0):
 		return ["Query is out of vocabulary"]
@@ -87,7 +87,10 @@ def find_similar(q, pos, num_keywords=5, num_sentences=3):
 				output_sents = [sent[0] for sent in best_sentences]
 				sim = dotted/(np.linalg.norm(doc)*np.linalg.norm(transformed))
 				if sim > 0.0:
-					sims.append((prosp, "{:.3f}".format(sim), find_similar_players(ind), prosp_image, 
-						"Probability of NBA Success: {:.3f}".format(prospect_to_prob[prosp]), output_sents, "/".join(position)))
+					if int(version) == 1:
+						sims.append((prosp, "{:.3f}".format(sim), find_similar_players(ind), prosp_image, "", [], ""))
+					elif int(version) == 2:
+						sims.append((prosp, "{:.3f}".format(sim), find_similar_players(ind), prosp_image, 
+							"Probability of NBA Success: {:.3f}".format(prospect_to_prob[prosp]), output_sents, "{} - ".format("/".join(position))))
 	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
 	return sorted_sims
