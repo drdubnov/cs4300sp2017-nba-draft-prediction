@@ -52,7 +52,7 @@
                     <option value="pf">Power Forward</option>
                     <option value="c">Center</option>
                 </select>
-                <select name="version" class="position-selector">
+                <select id="version-selection" name="version" class="position-selector">
                     <option value="2">Second Prototype</option>
                     <option value="1">First Prototype</option>
                 </select>
@@ -195,6 +195,17 @@
         }
         
     }
+
+    // Change what is seen with version change
+    $("#version-selection").change(function() {
+        var version = $("#version-selection").val();
+        console.log(version)
+        if (version == "1") {
+            $(".tag-word-area").hide();
+        } else if (version == "2") {
+            $(".tag-word-area").show();
+        }
+    })
 
     </script>
 
