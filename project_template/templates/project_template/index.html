@@ -2,6 +2,8 @@
     <head>
         <link rel="stylesheet" href="/static/bootstrap.min.css">
         <link rel="stylesheet" href="/static/main.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <script type="text/javascript" src="/static/jquery.min.js"></script>
     </head>
     
     <body>
@@ -16,11 +18,32 @@
         
         
         <form class="form-inline global-search" method='GET'>
-            <h4>Enter a text query to describe a certain prospect in the 2017 NBA Draft.</h4>
+            <h4><b>Select tags and enter a text query to describe a certain prospect in the 2017 NBA Draft.</b></h4>
+            <br><br>
+            <div class="tag-word-area">
+                <span class="tag-word" id="shooter" onclick="select_tag(event)"><h5>Shooter</h5></span>
+                <span class="tag-word" id="scorer" onclick="select_tag(event)"><h5>Scorer</h5></span>
+                <span class="tag-word" id="driver" onclick="select_tag(event)"><h5>Driver</h5></span>
+                <span class="tag-word" id="dunker" onclick="select_tag(event)"><h5>Dunker</h5></span>
+                <span class="tag-word" id="passer" onclick="select_tag(event)"><h5>Passer</h5></span>
+                <span class="tag-word" id="rebounder" onclick="select_tag(event)"><h5>Rebounder</h5></span>
+                <span class="tag-word" id="defender" onclick="select_tag(event)"><h5>Defender</h5></span>
+                <span class="tag-word" id="bigman" onclick="select_tag(event)"><h5>Big Man</h5></span>
+                <span class="tag-word" id="physicality" onclick="select_tag(event)"><h5>Physicality</h5></span>
+                <span class="tag-word" id="shotblocker" onclick="select_tag(event)"><h5>Shot Blocker</h5></span>
+                <span class="tag-word" id="athletic" onclick="select_tag(event)"><h5>Athletic</h5></span>
+                <span class="tag-word" id="quick" onclick="select_tag(event)"><h5>Quick</h5></span>
+                <span class="tag-word" id="leader" onclick="select_tag(event)"><h5>Leader</h5></span>
+                <span class="tag-word" id="length" onclick="select_tag(event)"><h5>Length</h5></span>
+                <span class="tag-word" id="smart" onclick="select_tag(event)"><h5>Smart</h5></span>
+                <span class="tag-word" id="skillful" onclick="select_tag(event)"><h5>Skillful</h5></span>
+                <span class="tag-word" id="flashy" onclick="select_tag(event)"><h5>Flashy</h5></span>
+                <span class="tag-word" id="potential" onclick="select_tag(event)"><h5>Potential</h5></span>
+            </div>
             <br><br>
             
             <div class="form-group">
-                <input id="input" type="text" name="search" class="form-control" placeholder="Describe a player">
+                <input id="input" type="text" name="search" class="form-control" oninput="checkText(event)" placeholder="Describe a player">
                 <select name="positions" class="position-selector">
                     <option value="any">Any Position</option>
                     <option value="pg">Point Guard</option>
@@ -55,24 +78,97 @@
                 <br>
             {% endfor %}
             <br>
-            
-            <!-- <div class="pagination">
-                <span class="step-links">
-                    {% if output.has_previous %}
-                    <a href= "{{magic_url}}&page={{ output.previous_page_number }}">previous</a>
-                    {% endif %}
-                    
-                    <!-- Showing the page numbers in Html Page -->
-                    <!--<span class="current">
-                    Page _{{ output.number }}_ of _{{ output.paginator.num_pages }}_
-                    </span>
-                    
-                    {% if output.has_next %}
-                    <a href= "{{magic_url}}&page={{ output.next_page_number }}">next</a>
-                    {% endif %}
-                </span>
-            </div> -->
         </div>
         <img class="footer-image" src="/static/images/footer_image.jpg">
     </body>
+
+    <script type="text/javascript">
+    function select_tag(event) {
+        var selectedClass = event["path"][1]["className"];
+        var selectedText = event["path"][1]["innerText"].toLowerCase();
+        var thisId = event["path"][1]["id"];
+        if (selectedClass == "tag-word") {
+            $("#" + thisId).css("background-color", "#31B0D5");
+            $("#" + thisId).css("color", "white");
+            $("#" + thisId).attr('class', 'tag-selected');
+            if ($("#input").val() == "") {
+                $("#input").val($("#input").val() + selectedText);
+            }
+            else {
+                $("#input").val($("#input").val() + " " + selectedText);
+            }
+        } else if (selectedClass == "tag-selected") {
+            var inputTokens = $("#input").val().split(" ")
+            if (inputTokens[0] == selectedText) {
+                $("#input").val($("#input").val().replace(selectedText, ""));
+                $("#" + thisId).css("background-color", "white");
+                $("#" + thisId).css("color", "black");
+                $("#" + thisId).attr('class', 'tag-word');
+            } else {
+                $("#input").val($("#input").val().replace(" " + selectedText, ""));
+                $("#" + thisId).css("background-color", "white");
+                $("#" + thisId).css("color", "black");
+                $("#" + thisId).attr('class', 'tag-word');
+            }
+        }
+    };
+
+    function checkText(event) {
+        var inputText = $("#input").val();
+        var tokenListLarge = inputText.split(" ");
+        // Make all tokens lowercase
+        var tokenList = []
+        for (var i = 0; i < tokenListLarge.length; i++) {
+            tokenList.push(tokenListLarge[i].toLowerCase());
+        }
+        // Account for "shot blocker" label
+        if (tokenList.indexOf("shot") >= 0) {
+            var shotIndex = tokenList.indexOf("shot");
+            if (tokenList[shotIndex + 1] == "blocker") {
+                tokenList.push("shot blocker");
+            }
+        }
+        // Account for "big man" label
+        if (tokenList.indexOf("big") >= 0) {
+            var shotIndex = tokenList.indexOf("big");
+            if (tokenList[shotIndex + 1] == "man") {
+                tokenList.push("big man");
+            }
+        }
+        var labelList = ["shooter", "scorer", "driver", "dunker", "passer", "rebounder", "defender", "big man", "physicality", "shot blocker", "athletic", "quick", "leader", "length", "smart", "skillful", "flashy", "potential"];
+        for (token in tokenList) {
+            var smallToken = tokenList[token].toLowerCase();
+            if (labelList.indexOf(smallToken) >= 0) {
+                var thisIndex = labelList.indexOf(smallToken);
+                var thisLabel = labelList[thisIndex];
+                if (thisLabel == "shot blocker" || thisLabel == "big man") {
+                    thisLabel = thisLabel.replace(" ", "")
+                }
+                $("#" + thisLabel).attr('class', 'tag-selected');
+                $("#" + thisLabel).css("background-color", "#31B0D5");
+                $("#" + thisLabel).css("color", "white");
+            } 
+        }
+        var selectedList = [];
+        $(".tag-selected").each(function(i, obj) {
+            selectedList.push(obj["id"]);
+        })
+        for (s_item in selectedList) {
+            var checkId = selectedList[s_item];
+            if (inputText.includes(checkId)) {
+                continue;
+            }
+            else {
+                if (checkId == "shot blocker" || checkId == "big man") {
+                    checkId = thisLabel.replace(" ", "")
+                }
+                $("#" + checkId).attr('class', 'tag-word');
+                $("#" + checkId).css("background-color", "white");
+                $("#" + checkId).css("color", "black");
+            }
+        }
+    }
+
+    </script>
+
 </html>

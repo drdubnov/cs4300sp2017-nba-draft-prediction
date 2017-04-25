@@ -37,6 +37,10 @@ body {
 }
 
 /* New CSS for NBA project*/
+h1, h2, h3, h4, h5, h6, p {
+	font-family: 'Roboto', sans-serif;
+}
+
 .top-banner {
 	background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 59%, rgba(0, 0, 0, 0.65) 100%), url('/static/images/big_board.png') no-repeat;
 	background-size: cover;
@@ -51,10 +55,10 @@ body {
 .project-name {
 	position: absolute;
     text-align: left;
-    top: 300px;
+    top: 290px;
     left: 30px;
-    text-shadow: 1px 1px 2px white;
-    font-size: 37px;
+    text-shadow: 1px 1px 1px #cccccc;
+    font-size: 48px;
     color: #006BB7;
     overflow-x: none; 
 }
@@ -94,4 +98,42 @@ body {
 	height: 32px;
 	background-color: #ED174B;
 	color: white;
+}
+
+.tag-word-area {
+	width: 50%;
+}
+
+.tag-word {
+	padding: 4px;
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.tag-word h5 {
+	margin-top: 0px;
+}
+
+.tag-word:hover {
+	background-color: #ED174B;
+	color: white;
+	cursor: pointer;
+}
+
+.tag-selected {
+	padding: 4px;
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.tag-selected h5 {
+	margin-top: 0px;
+}
+
+.tag-selected:hover {
+	background-color: #ED174B;
+	color: white;
+	cursor: pointer;
 }
