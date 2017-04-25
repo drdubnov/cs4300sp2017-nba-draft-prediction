@@ -176,7 +176,7 @@
             }
             else {
                 if (checkId == "shot blocker" || checkId == "big man") {
-                    checkId = thisLabel.replace(" ", "")
+                    checkId = checkId.replace(" ", "")
                 }
                 $("#" + checkId).attr('class', 'tag-word');
                 $("#" + checkId).css("background-color", "white");

@@ -13,9 +13,11 @@ def index(request):
     output=''
     position = ''
     search = ''
+    version = ''
     if request.GET.get('search'):
         search = request.GET.get('search')
         short_pos = request.GET.get('positions')
+        version = request.GET.get('version')
         if short_pos == "any":
             position = "Output for Players of Any Position"
         elif short_pos == "pg":
@@ -28,7 +30,7 @@ def index(request):
             position = "Output for Power Forwards"
         elif short_pos == "c":
             position = "Output for Centers"
-        output_list = find_similar(search, short_pos)
+        output_list = find_similar(search, short_pos, version)
         paginator = Paginator(output_list, 10)
         page = request.GET.get('page')
         try:
