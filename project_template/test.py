@@ -90,6 +90,6 @@ def find_similar(q, pos, num_keywords=5, num_sentences=3):
 				if sim > 0.0:
 					print("/".join(position))
 					sims.append((prosp, "{:.3f}".format(sim), find_similar_players(ind), prosp_image, 
-						"Probability of Success: {:.3f}".format(prospect_to_prob[prosp]), output_sents, "/".join(position)))
+						"Probability of NBA Success: {:.3f}".format(prospect_to_prob[prosp]), output_sents, "/".join(position)))
 	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
 	return sorted_sims

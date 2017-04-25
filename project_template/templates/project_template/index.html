@@ -51,7 +51,11 @@
                     <option value="sf">Small Forward</option>
                     <option value="pf">Power Forward</option>
                     <option value="c">Center</option>
-                  </select>
+                </select>
+                <select name="version" class="position-selector">
+                    <option value="second">Second Prototype</option>
+                    <option value="first">First Prototype</option>
+                </select>
               </div>
             <button type="submit" class="btn btn-info"> Find Players! </button>
         </form>
@@ -59,15 +63,21 @@
         <div class="form-inline global-search">
             <h4>{{pos}}</h4><br>
             <h5><i>{{search}}</i></h5><br><br>
+            <h4>Click on player card to show quotes:</h4>
+            <br>
             {% for line in output %}
-                <div class="player-row">
-                    <img src="/static/images/player_images/{{line.3}}" class="result-image">
+                <div class="player-row" onclick="expandPlayer(event)" id="{{forloop.counter}}">
+                    <div class="player-row-image">
+                        <img src="/static/images/player_images/{{line.3}}" class="result-image">
+                    </div>
                     <div class="player-row-content">
-                        <h3>{{line.0}}</h3>
+                        <h3>{{line.6}} - {{line.0}}</h3>
+                        <br>
+                        <h5>{{line.4}}</h5>
                         <br>
                         Query Score: {{line.1}}
                         <br>
-                        <h5>Similar NBA Players:</h5>
+                        <h5><b>Similar NBA Players:</b></h5>
                         <br>
                         {% for simplayer in line.2 %}
                             {{simplayer.0}} - {{simplayer.1}}
@@ -76,6 +86,12 @@
                     </div>
                 </div>
                 <br>
+                <div class="quote-row" id="quote-{{forloop.counter}}">
+                    {% for quote in line.5 %}
+                        <h5>"{{quote}}"</h5>
+                        <br>
+                    {% endfor %}
+                </div>
             {% endfor %}
             <br>
         </div>
@@ -167,6 +183,17 @@
                 $("#" + checkId).css("color", "black");
             }
         }
+    };
+
+    function expandPlayer(event) {
+        var id = event["path"][1]["id"];
+        var currentDisplay = $("#quote-" + id).css("display");
+        if (currentDisplay == "none") {
+            $("#quote-" + id).css("display","inline-block");
+        } else {
+            $("#quote-" + id).css("display","none");
+        }
+        
     }
 
     </script>
