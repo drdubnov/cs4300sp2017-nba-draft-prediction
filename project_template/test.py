@@ -6,13 +6,20 @@ import numpy as np
 import pickle
 import re
 from scipy import io
+import nltk
+
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+sentim_analyzer = SentimentIntensityAnalyzer()
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+prospect_to_sentences = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_sentences.json")))
 
 # prospect_docs = io.mmread(os.path.join(BASE_DIR, "data", 'prospects.mtx')).toarray()
 # player_docs = io.mmread(os.path.join(BASE_DIR, "data", 'players.mtx')).toarray()
 
 tfidf = pickle.load(open(os.path.join(BASE_DIR, "data", 'model.pkl')))
+tfidf_feature_names = tfidf.get_feature_names()
 prospect_docs = pickle.load(open(os.path.join(BASE_DIR, "data", 'prospects.pkl'))).toarray()
 player_docs = pickle.load(open(os.path.join(BASE_DIR, "data", 'players.pkl'))).toarray()
 
@@ -29,37 +36,75 @@ prospect_to_image = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_i
 
 
 def find_similar_players(prospect_ind, k=3):
-	prospect_name = ind_to_prospect[str(prospect_ind)]
-	prospect_position = prospect_to_position[prospect_name]
-	prospect_doc = prospect_docs[prospect_ind]
-	sims = []
-	for ind, row in enumerate(player_docs):
-	    name = ind_to_player[str(ind)]
-	    position = player_to_position[name]
-	    if not set(position).isdisjoint(prospect_position):
-	        doc = row.flatten()
-	        if not np.all(doc == 0.0):
-	            dotted = np.dot(doc, prospect_doc)	
-	            sim = dotted/(np.linalg.norm(doc)*np.linalg.norm(prospect_doc))
-	            sims.append((name, sim))
-	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
-	return sorted_sims[:k]
+    prospect_name = ind_to_prospect[str(prospect_ind)]
+    prospect_position = prospect_to_position[prospect_name]
+    prospect_doc = prospect_docs[prospect_ind]
+    sims = []
+    for ind, row in enumerate(player_docs):
+        name = ind_to_player[str(ind)]
+        position = player_to_position[name]
+        if not set(position).isdisjoint(prospect_position):
+            doc = row.flatten()
+            if not np.all(doc == 0.0):
+                dotted = np.dot(doc, prospect_doc)
+                sim = dotted/(np.linalg.norm(doc)*np.linalg.norm(prospect_doc))
+                sims.append((name, sim))
+    sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
+    return sorted_sims[:k]
 
 
-def find_similar(q, pos):
-	transformed = tfidf.transform([q]).toarray().flatten()
-	if np.all(transformed == 0.0):
-		return ["Query is out of vocabulary"]
-	sims = []
-	for ind, row in enumerate(prospect_docs):
-		prosp = ind_to_prospect[str(ind)]
-		if pos == "any" or pos.upper() in prospect_to_position[prosp]:
-			prosp_image = prospect_to_image[prosp]
-			doc = row.flatten()
-			if not np.all(doc == 0.0):
-				dotted = np.dot(doc, transformed)
-				sim = dotted/(np.linalg.norm(doc)*np.linalg.norm(transformed))
-				if sim > 0.0:
-					sims.append((prosp, sim, find_similar_players(ind), prosp_image))
-	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
-	return sorted_sims
+def find_similar(q, pos, num_keywords=5, num_sentences=5):
+    transformed = tfidf.transform([q]).toarray().flatten()
+    print(np.size(np.where(transformed > 0)))
+    if np.all(transformed == 0.0):
+        return ["Query is out of vocabulary"]
+    sims = []
+    for ind, row in enumerate(prospect_docs):
+        prosp = ind_to_prospect[str(ind)]
+        if pos == "any" or pos.upper() in prospect_to_position[prosp]:
+            prosp_image = prospect_to_image[prosp]
+            doc = row.flatten()
+            # Make sure that there is at least some similarity between the doc and the query
+            if not np.all(doc == 0.0) and not np.all(np.dot(doc, transformed) == 0):
+                # dotted = np.dot(doc, transformed)
+
+                mult = doc * transformed
+                num_matched = np.size(np.where(mult != 0))
+                top_words_inds = np.argsort(mult)[::-1][:min(num_keywords, num_matched)]
+                top_words = [tfidf_feature_names[top_word_ind] for top_word_ind in top_words_inds]
+
+                print(top_words)
+                print([mult[top_word_ind] for top_word_ind in top_words_inds])
+
+                sentences = prospect_to_sentences[prosp]
+                sentences_with_top_words = []
+                actual_top_words = []
+                sentences_with_top_words_cosine_sim = []
+
+                for sentence in sentences:
+                    # for word in nltk.word_tokenize(sentence):
+                    tokens = nltk.word_tokenize(sentence.lower())
+                    top_words_in_sentence = []
+                    for word in top_words:
+                        if word in tokens:
+                            top_words_in_sentence.append(word)
+
+                    if len(top_words_in_sentence) > 0:
+                        sentence_tfidf = tfidf.transform([sentence]).toarray().flatten()
+                        sentence_cosine_sim = np.dot(transformed, sentence_tfidf) / (np.linalg.norm(transformed) *
+                                                                                     np.linalg.norm(sentence_tfidf))
+                        sentences_with_top_words.append(sentence)
+                        actual_top_words.append(top_words_in_sentence)
+                        sentences_with_top_words_cosine_sim.append(sentence_cosine_sim)
+
+                best_sentences = sorted(zip(sentences_with_top_words, actual_top_words, sentences_with_top_words_cosine_sim),
+                                        key=lambda x: (x[2], np.size(x[1])),
+                                        reverse=True)[:min(num_sentences, len(sentences_with_top_words))]
+
+                dotted = np.sum(mult)
+                sim = dotted/(np.linalg.norm(doc)*np.linalg.norm(transformed))
+                if sim > 0.0:
+                    sims.append((prosp, sim, find_similar_players(ind), prosp_image, best_sentences))
+    sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
+    print(sorted_sims[:5])
+    return sorted_sims
