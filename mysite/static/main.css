@@ -164,3 +164,29 @@ h1, h2, h3, h4, h5, h6, p {
 	color: white;
 	cursor: pointer;
 }
+
+@media screen and (max-width: 1000px) {
+    .project-name {
+    	font-size: 32px;
+    }
+
+    .player-row {
+    	width: 80%;
+    }
+
+    .form-group {
+    	width: 95%;
+    }
+
+    #input {
+    	width: 100%;
+    }
+
+    .position-selector {
+    	margin: 10px;
+    }
+
+    .tag-word-area {
+    	width: 80%;
+    }
+}

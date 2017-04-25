@@ -53,8 +53,8 @@
                     <option value="c">Center</option>
                 </select>
                 <select name="version" class="position-selector">
-                    <option value="second">Second Prototype</option>
-                    <option value="first">First Prototype</option>
+                    <option value="2">Second Prototype</option>
+                    <option value="1">First Prototype</option>
                 </select>
               </div>
             <button type="submit" class="btn btn-info"> Find Players! </button>
@@ -63,12 +63,12 @@
         <div class="form-inline global-search">
             <h4>{{pos}}</h4><br>
             <h5><i>{{search}}</i></h5><br><br>
-            <h4>Click on player card to show quotes:</h4>
+            <h4>Click on red player card to show quotes:</h4>
             <br>
             {% for line in output %}
                 <div class="player-row" onclick="expandPlayer(event)" id="{{forloop.counter}}">
                     <div class="player-row-image">
-                        <img src="/static/images/player_images/{{line.3}}" class="result-image">
+                        <img src="/static/images/player_images/{{line.3}}" class="result-image" >
                     </div>
                     <div class="player-row-content">
                         <h3>{{line.6}} - {{line.0}}</h3>
