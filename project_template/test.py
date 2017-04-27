@@ -20,20 +20,25 @@ ind_to_prospect = json.load(open(os.path.join(BASE_DIR, "data", "ind_to_prospect
 ind_to_player = json.load(open(os.path.join(BASE_DIR, "data", "ind_to_player.json")))
 
 prospect_to_image = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_image.json")))
+prospect_to_link = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_link.json")))
 prospect_to_prob = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_prob.json")))
 prospect_to_sentences = json.load(open(os.path.join(BASE_DIR, "data", "final_cleaned_prospects_to_sents.json")))
 prospect_to_docs = {prosp: "".join(sents) for (prosp, sents) in prospect_to_sentences.items()}
 tfidf2 = pickle.load(open(os.path.join(BASE_DIR, "data", 'model2.pkl')))
 player_to_tfidf = json.load(open(os.path.join(BASE_DIR, "data", "player_to_tfidf.json")))
+label_to_synonyms = json.load(open(os.path.join(BASE_DIR, "data", "label_to_synonyms.json")))
 
 
 sid = SentimentIntensityAnalyzer()
 
 for p in prospect_to_sentences.keys():
-    if p not in prospect_to_image:
-        print p, "image"
-    if p not in prospect_to_prob:
-        print p, "prob"
+	if p not in prospect_to_link:
+		print p, "link"
+	if p not in prospect_to_image:
+		print p, "image"
+	if p not in prospect_to_prob:
+		print p, "prob"
+
 
 
 def find_similar_players(prospect_name, tfidf_vector, k=3):
@@ -74,7 +79,11 @@ def find_similar(query, pos, version, num_keywords=5, num_sentences=3):
 		return find_similar_old(query, pos, version)
 
 def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
-	transformed = tfidf2.transform([query]).toarray().flatten()
+	new_query = [query]
+	for word in query.split():
+		if word in label_to_synonyms:
+			new_query.extend(label_to_synonyms[word])
+	transformed = tfidf2.transform([" ".join(new_query)]).toarray().flatten()
 	if np.all(transformed == 0.0):
 		return ["Query is out of vocabulary"]
 	sims = []
@@ -104,7 +113,6 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 							sentences_with_top_words.append(sentence)
 							actual_top_words.append(top_words_in_sentence)
 							sentences_with_top_words_cosine_sim.append(sentence_cosine_sim)
-
 				t_doc = tfidf2.transform([sentence]).toarray().flatten()
 				if not np.all(t_doc == 0.0):
 				    ss = sid.polarity_scores(sentence.lower())
