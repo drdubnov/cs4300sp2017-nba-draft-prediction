@@ -39,6 +39,10 @@ for p in prospect_to_sentences.keys():
 	if p not in prospect_to_prob:
 		print p, "prob"
 
+def sort_positions(pos):
+	pos_to_num = {"PG": 1, "SG": 2, "SF": 3, "PF": 4, "C": 5}
+	sorted_pos = sorted(pos, key=lambda x:pos_to_num[x])
+	return "/".join(sorted_pos)
 
 
 def find_similar_players(prospect_name, tfidf_vector, k=3):
@@ -124,7 +128,8 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 						top_words_in_sentence.append(word)
 						if len(top_words_in_sentence) > 0:
 							sentence_tfidf = tfidf2.transform([sentence]).toarray().flatten()
-							sentence_cosine_sim = np.dot(transformed, sentence_tfidf) / (np.linalg.norm(transformed) * np.linalg.norm(sentence_tfidf))
+							sentence_cosine_sim = np.dot(transformed, 
+								sentence_tfidf) / (np.linalg.norm(transformed) * np.linalg.norm(sentence_tfidf))
 							sentences_with_top_words.append(sentence)
 							actual_top_words.append(top_words_in_sentence)
 							sentences_with_top_words_cosine_sim.append(sentence_cosine_sim)
@@ -135,10 +140,12 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 			if not np.all(total_doc == 0):
 				sim = np.dot(total_doc, transformed)/(np.linalg.norm(total_doc)*np.linalg.norm(transformed))
 				best_sentences = sorted(zip(sentences_with_top_words, actual_top_words, sentences_with_top_words_cosine_sim), 
-				                        key=lambda x: (x[2], np.size(x[1])), reverse=True)[:min(num_sentences, len(sentences_with_top_words))]
+				                        key=lambda x: (x[2], np.size(x[1])), 
+				                        reverse=True)[:min(num_sentences, len(sentences_with_top_words))]
 				output_sents = list(set([sent[0] for sent in best_sentences]))
 				sims.append((prosp, "{:.3f}".format(sim), find_similar_players(prosp, total_doc), prosp_image, 
-					"Probability of NBA Success: {:.3f}".format(prospect_to_prob[prosp]), bold_query(new_query, output_sents), "{} - ".format("/".join(position))))
+					"Probability of NBA Success: {:.3f}".format(prospect_to_prob[prosp]), 
+					bold_query(new_query, output_sents), "{} - ".format(sort_positions(position))))
 	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
 	return sorted_sims
 
@@ -174,7 +181,8 @@ def find_similar_old(q, pos, version, num_keywords=5, num_sentences=3):
 
 					if len(top_words_in_sentence) > 0:
 						sentence_tfidf = tfidf.transform([sentence]).toarray().flatten()
-						sentence_cosine_sim = np.dot(transformed, sentence_tfidf) / (np.linalg.norm(transformed) * np.linalg.norm(sentence_tfidf))
+						sentence_cosine_sim = np.dot(transformed, 
+							sentence_tfidf) / (np.linalg.norm(transformed) * np.linalg.norm(sentence_tfidf))
 						sentences_with_top_words.append(sentence)
 						actual_top_words.append(top_words_in_sentence)
 						sentences_with_top_words_cosine_sim.append(sentence_cosine_sim)
@@ -187,6 +195,7 @@ def find_similar_old(q, pos, version, num_keywords=5, num_sentences=3):
 						sims.append((prosp, "{:.3f}".format(sim), find_similar_players_old(ind), prosp_image, "", [], ""))
 					elif int(version) == 2:
 						sims.append((prosp, "{:.3f}".format(sim), find_similar_players_old(ind), prosp_image, 
-							"Probability of NBA Success: {:.3f}".format(prospect_to_prob[prosp]), output_sents, "{} - ".format("/".join(position))))
+							"Probability of NBA Success: {:.3f}".format(prospect_to_prob[prosp]), 
+							output_sents, "{} - ".format("/".join(position))))
 	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
 	return sorted_sims
