@@ -53,6 +53,7 @@
                     <option value="c">Center</option>
                 </select>
                 <select id="version-selection" name="version" class="position-selector">
+                    <option value="3">Final Prototype</option>
                     <option value="2">Second Prototype</option>
                     <option value="1">First Prototype</option>
                 </select>
@@ -204,7 +205,7 @@
             $(".tag-word-area").hide();
             $("#click-on-red").hide();
 
-        } else if (version == "2") {
+        } else if (version == "2" || version == "3") {
             $(".tag-word-area").show();
             $("#click-on-red").show();
         }
