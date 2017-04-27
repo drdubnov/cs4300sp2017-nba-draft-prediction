@@ -1,2 +1,2 @@
 punkt
-vader
+vader_lexicon
