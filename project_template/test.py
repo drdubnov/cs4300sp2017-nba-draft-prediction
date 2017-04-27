@@ -23,16 +23,13 @@ ind_to_player = json.load(open(os.path.join(BASE_DIR, "data", "ind_to_player.jso
 
 prospect_to_image = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_image.json")))
 prospect_to_link = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_link.json")))
+player_to_link = json.load(open(os.path.join(BASE_DIR, "data", "player_to_link.json")))
 prospect_to_prob = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_prob.json")))
-prospect_to_sentences = json.load(open(os.path.join(BASE_DIR, "data", "final_cleaned_prospects_to_sents.json")))
-prospect_to_docs = {prosp: " ".join(sents) for (prosp, sents) in prospect_to_sentences.items()}
+prospect_to_sentences = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_sents.json")))
 tfidf2 = pickle.load(open(os.path.join(BASE_DIR, "data", 'model2.pkl')))
 player_to_tfidf = json.load(open(os.path.join(BASE_DIR, "data", "player_to_tfidf.json")))
 label_to_synonyms = json.load(open(os.path.join(BASE_DIR, "data", "label_to_synonyms.json")))
 prospect_to_sent_docs = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_sent_docs.json")))
-
-
-sid = SentimentIntensityAnalyzer()
 
 
 for p in prospect_to_sentences.keys():
@@ -54,7 +51,7 @@ def find_similar_players(prospect_name, tfidf_vector, k=3):
 			if not np.all(transformed == 0.0):
 				dotted = np.dot(transformed, tfidf_vector)	
 				sim = dotted/(np.linalg.norm(transformed)*np.linalg.norm(tfidf_vector))
-				sims.append((player, "{:.3f}".format(sim)))
+				sims.append((player, "{:.3f}".format(sim), player_to_link[player]))
 	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
 	return sorted_sims[:k]
 
@@ -130,9 +127,7 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 	for tup in sorted_sims:
 		prosp = tup[0]
 		sents = prospect_to_sentences[prosp]
-		doc = prospect_to_docs[prosp]
-
-		mult = np.multiply(tfidf2.transform([doc]).toarray().flatten(), transformed)
+		mult = np.multiply(np.array(prospect_to_sent_docs[prosp]), transformed)
 		num_matched = np.size(np.where(mult != 0))
 		top_words_inds = np.argsort(mult)[::-1][:min(num_keywords, num_matched)]
 		top_words = [tfidf2.get_feature_names()[top_word_ind] for top_word_ind in top_words_inds]
@@ -161,7 +156,7 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 		output_sents = list(set([sent[0] for sent in best_sentences]))
 		sorted_sims_out.append((prosp, tup[1], find_similar_players(prosp, tup[2]), prospect_to_image[prosp], 
 			"Probability of NBA Success: {:.3f}".format(prospect_to_prob[prosp]), bold_query(new_query, output_sents), 
-			"{} - ".format(sort_positions(prospect_to_position[prosp]))))
+			"{} - ".format(sort_positions(prospect_to_position[prosp])), prospect_to_link[prosp]))
 	print(time.time() - start)
 	return sorted_sims_out
 
