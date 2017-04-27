@@ -53,6 +53,7 @@
                     <option value="c">Center</option>
                 </select>
                 <select id="version-selection" name="version" class="position-selector">
+                    <option value="3">Final Prototype</option>
                     <option value="2">Second Prototype</option>
                     <option value="1">First Prototype</option>
                 </select>
@@ -63,7 +64,7 @@
         <div class="form-inline global-search">
             <h4>{{pos}}</h4><br>
             <h5><i>{{search}}</i></h5><br><br>
-            <h4>Click on red player card to show quotes:</h4>
+            <h4 id="click-on-red">Click on red player card to show quotes:</h4>
             <br>
             {% for line in output %}
                 <div class="player-row" onclick="expandPlayer(event)" id="{{forloop.counter}}">
@@ -88,7 +89,7 @@
                 <br>
                 <div class="quote-row" id="quote-{{forloop.counter}}">
                     {% for quote in line.5 %}
-                        <h5>"{{quote}}"</h5>
+                        <h5>"{{quote|safe}}"</h5>
                         <br>
                     {% endfor %}
                 </div>
@@ -202,8 +203,11 @@
         console.log(version)
         if (version == "1") {
             $(".tag-word-area").hide();
-        } else if (version == "2") {
+            $("#click-on-red").hide();
+
+        } else if (version == "2" || version == "3") {
             $(".tag-word-area").show();
+            $("#click-on-red").show();
         }
     })
 
