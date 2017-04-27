@@ -6,6 +6,8 @@ import numpy as np
 import pickle
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import time
+import re
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -23,13 +25,15 @@ prospect_to_image = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_i
 prospect_to_link = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_link.json")))
 prospect_to_prob = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_prob.json")))
 prospect_to_sentences = json.load(open(os.path.join(BASE_DIR, "data", "final_cleaned_prospects_to_sents.json")))
-prospect_to_docs = {prosp: "".join(sents) for (prosp, sents) in prospect_to_sentences.items()}
+prospect_to_docs = {prosp: " ".join(sents) for (prosp, sents) in prospect_to_sentences.items()}
 tfidf2 = pickle.load(open(os.path.join(BASE_DIR, "data", 'model2.pkl')))
 player_to_tfidf = json.load(open(os.path.join(BASE_DIR, "data", "player_to_tfidf.json")))
 label_to_synonyms = json.load(open(os.path.join(BASE_DIR, "data", "label_to_synonyms.json")))
+prospect_to_sent_docs = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_sent_docs.json")))
 
 
 sid = SentimentIntensityAnalyzer()
+
 
 for p in prospect_to_sentences.keys():
 	if p not in prospect_to_link:
@@ -38,11 +42,6 @@ for p in prospect_to_sentences.keys():
 		print p, "image"
 	if p not in prospect_to_prob:
 		print p, "prob"
-
-def sort_positions(pos):
-	pos_to_num = {"PG": 1, "SG": 2, "SF": 3, "PF": 4, "C": 5}
-	sorted_pos = sorted(pos, key=lambda x:pos_to_num[x])
-	return "/".join(sorted_pos)
 
 
 def find_similar_players(prospect_name, tfidf_vector, k=3):
@@ -58,6 +57,7 @@ def find_similar_players(prospect_name, tfidf_vector, k=3):
 				sims.append((player, "{:.3f}".format(sim)))
 	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
 	return sorted_sims[:k]
+
 
 def find_similar_players_old(prospect_ind, k=3):
 	prospect_name = ind_to_prospect[str(prospect_ind)]
@@ -76,11 +76,6 @@ def find_similar_players_old(prospect_ind, k=3):
 	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
 	return sorted_sims[:k]
 
-def find_similar(query, pos, version, num_keywords=5, num_sentences=3):
-	if int(version) == 3:
-		return find_similar_new(query, pos)
-	else:
-		return find_similar_old(query, pos, version)
 
 def bold_query(query, outputs):
 	out = []
@@ -97,8 +92,16 @@ def bold_query(query, outputs):
 		out.append(" ".join(bolded))
 	return out
 
+
+def sort_positions(pos):
+	pos_to_num = {"PG": 1, "SG": 2, "SF": 3, "PF": 4, "C": 5}
+	sorted_pos = sorted(pos, key=lambda x:pos_to_num[x])
+	return "/".join(sorted_pos)
+
+
 def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
-	new_query = [query]
+	start = time.time()
+	new_query = query.split()
 	for word in query.split():
 		if word in label_to_synonyms:
 			new_query.extend(label_to_synonyms[word])
@@ -109,18 +112,19 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 	for prosp, sents in prospect_to_sentences.items():
 		position = prospect_to_position[prosp]
 		if pos == "any" or pos.upper() in position:
-			prosp_image = prospect_to_image[prosp]
 			total_doc = np.zeros(len(tfidf2.get_feature_names()))
-			# doc = prospect_to_docs[prosp]
-			# total_doc = tfidf2.transform([doc]).toarray().flatten()
-			for sentence in sents:
-				t_doc = tfidf2.transform([sentence]).toarray().flatten()
-				if not np.all(t_doc == 0.0):
-					ss = sid.polarity_scores(sentence.lower())
-					total_doc += t_doc*np.exp(-ss["neg"])
+			total_doc = np.array(prospect_to_sent_docs[prosp])
+			#doc = prospect_to_docs[prosp]
+			#total_doc = tfidf2.transform([doc]).toarray().flatten()
+			# for sentence in sents:
+			# 	t_doc = tfidf2.transform([sentence]).toarray().flatten()
+			# 	if not np.all(t_doc == 0.0):
+			# 		#ss = sid.polarity_scores(sentence.lower())
+			# 		#total_doc += t_doc*np.exp(-ss["neg"])
+			# 		total_doc += t_doc
 			if not np.all(total_doc == 0):
 				sim = np.dot(total_doc, transformed)/(np.linalg.norm(total_doc)*np.linalg.norm(transformed))
-				sims.append((prosp, "{:.3f}".format(sim), total_doc, new_query, "{} - ".format(sort_positions(position))))
+				sims.append((prosp, "{:.3f}".format(sim), total_doc))
 	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)[:min(10, len(sims))]
 	sorted_sims_out = []
 	for tup in sorted_sims:
@@ -137,6 +141,8 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 		actual_top_words = []
 		sentences_with_top_words_cosine_sim = []
 		for sentence in sents:
+			sentence = re.sub("([a-z]+)\/([a-z|A-Z]+)", 
+				lambda matchobj: matchobj.group(1) + " " + matchobj.group(2), sentence)
 			tokens = nltk.word_tokenize(sentence.lower())
 			top_words_in_sentence = []
 			for word in top_words:
@@ -149,15 +155,16 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 						sentences_with_top_words.append(sentence)
 						actual_top_words.append(top_words_in_sentence)
 						sentences_with_top_words_cosine_sim.append(sentence_cosine_sim)
-		if not np.all(total_doc == 0):
-			best_sentences = sorted(zip(sentences_with_top_words, actual_top_words, sentences_with_top_words_cosine_sim), 
-			                        key=lambda x: (x[2], np.size(x[1])), 
-			                        reverse=True)[:min(num_sentences, len(sentences_with_top_words))]
-			output_sents = list(set([sent[0] for sent in best_sentences]))
-			sorted_sims_out.append((prosp, tup[1], find_similar_players(prosp, tup[2]), prospect_to_image[prosp], 
-				"Probability of NBA Success: {:.3f}".format(prospect_to_prob[prosp]), bold_query(tup[3], output_sents), tup[4]))
-
+		best_sentences = sorted(zip(sentences_with_top_words, actual_top_words, sentences_with_top_words_cosine_sim), 
+		                        key=lambda x: (x[2], np.size(x[1])), 
+		                        reverse=True)[:min(num_sentences, len(sentences_with_top_words))]
+		output_sents = list(set([sent[0] for sent in best_sentences]))
+		sorted_sims_out.append((prosp, tup[1], find_similar_players(prosp, tup[2]), prospect_to_image[prosp], 
+			"Probability of NBA Success: {:.3f}".format(prospect_to_prob[prosp]), bold_query(new_query, output_sents), 
+			"{} - ".format(sort_positions(prospect_to_position[prosp]))))
+	print(time.time() - start)
 	return sorted_sims_out
+
 
 def find_similar_old(q, pos, version, num_keywords=5, num_sentences=3):
 	transformed = tfidf.transform([q]).toarray().flatten()
@@ -209,3 +216,10 @@ def find_similar_old(q, pos, version, num_keywords=5, num_sentences=3):
 							output_sents, "{} - ".format("/".join(position))))
 	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
 	return sorted_sims
+
+
+def find_similar(query, pos, version, num_keywords=5, num_sentences=3):
+	if int(version) == 3:
+		return find_similar_new(query, pos)
+	else:
+		return find_similar_old(query, pos, version)
