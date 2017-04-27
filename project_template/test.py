@@ -78,6 +78,18 @@ def find_similar(query, pos, version, num_keywords=5, num_sentences=3):
 	else:
 		return find_similar_old(query, pos, version)
 
+def bold_query(query, outputs):
+	out = []
+	for sent in outputs:
+		bolded = []
+		for word in nltk.word_tokenize(sent):
+			if word.lower() in query:
+				bolded.append("<em><strong>"+word+"</strong></em>")
+			else:
+				bolded.append(word)
+		out.append(" ".join(bolded))
+	return out
+
 def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 	new_query = [query]
 	for word in query.split():
@@ -123,7 +135,7 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 				                        key=lambda x: (x[2], np.size(x[1])), reverse=True)[:min(num_sentences, len(sentences_with_top_words))]
 				output_sents = list(set([sent[0] for sent in best_sentences]))
 				sims.append((prosp, "{:.3f}".format(sim), find_similar_players(prosp, total_doc), prosp_image, 
-					"Probability of NBA Success: {:.3f}".format(prospect_to_prob[prosp]), output_sents, "{} - ".format("/".join(position))))
+					"Probability of NBA Success: {:.3f}".format(prospect_to_prob[prosp]), bold_query(new_query, output_sents), "{} - ".format("/".join(position))))
 	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
 	return sorted_sims
 

@@ -89,7 +89,7 @@
                 <br>
                 <div class="quote-row" id="quote-{{forloop.counter}}">
                     {% for quote in line.5 %}
-                        <h5>"{{quote}}"</h5>
+                        <h5>"{{quote|safe}}"</h5>
                         <br>
                     {% endfor %}
                 </div>
