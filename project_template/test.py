@@ -82,8 +82,11 @@ def bold_query(query, outputs):
 	out = []
 	for sent in outputs:
 		bolded = []
-		for word in nltk.word_tokenize(sent):
-			if word.lower() in query:
+		for word in sent.split():
+			cleaned = word.lower()
+			for punct in ["."]:
+				cleaned = cleaned.replace(punct, "")
+			if cleaned in query:
 				bolded.append("<em><strong>"+word+"</strong></em>")
 			else:
 				bolded.append(word)
