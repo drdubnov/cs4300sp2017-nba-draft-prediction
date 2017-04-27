@@ -23,7 +23,7 @@ def index(request):
         elif short_pos == "pg":
             position = "Output for Point Guards"
         elif short_pos == "sg":
-            rposition = "Output for Shooting Guards"
+            position = "Output for Shooting Guards"
         elif short_pos == "sf":
             position = "Output for Small Forwards"
         elif short_pos == "pf":
