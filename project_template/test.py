@@ -135,19 +135,22 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 							sentences_with_top_words_cosine_sim.append(sentence_cosine_sim)
 				t_doc = tfidf2.transform([sentence]).toarray().flatten()
 				if not np.all(t_doc == 0.0):
-				    ss = sid.polarity_scores(sentence.lower())
-				    total_doc += t_doc*np.exp(-ss["neg"])
+				    # ss = sid.polarity_scores(sentence.lower())
+				    # total_doc += t_doc*np.exp(-ss["neg"])
+				    total_doc += t_doc
 			if not np.all(total_doc == 0):
 				sim = np.dot(total_doc, transformed)/(np.linalg.norm(total_doc)*np.linalg.norm(transformed))
 				best_sentences = sorted(zip(sentences_with_top_words, actual_top_words, sentences_with_top_words_cosine_sim), 
 				                        key=lambda x: (x[2], np.size(x[1])), 
 				                        reverse=True)[:min(num_sentences, len(sentences_with_top_words))]
 				output_sents = list(set([sent[0] for sent in best_sentences]))
-				sims.append((prosp, "{:.3f}".format(sim), find_similar_players(prosp, total_doc), prosp_image, 
-					"Probability of NBA Success: {:.3f}".format(prospect_to_prob[prosp]), 
-					bold_query(new_query, output_sents), "{} - ".format(sort_positions(position))))
-	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
-	return sorted_sims
+				sims.append((prosp, "{:.3f}".format(sim), total_doc, bold_query(new_query, output_sents), "{} - ".format(sort_positions(position))))
+	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)[:max(10, len(sims))]
+	sorted_sims_out = []
+	for tup in sorted_sims:
+		sorted_sims_out.append((tup[0], tup[1], find_similar_players(tup[0], tup[2]), prospect_to_image[tup[0]], 
+			"Probability of NBA Success: {:.3f}".format(prospect_to_prob[tup[0]]), tup[3], tup[4]))
+	return sorted_sims_out
 
 def find_similar_old(q, pos, version, num_keywords=5, num_sentences=3):
 	transformed = tfidf.transform([q]).toarray().flatten()
