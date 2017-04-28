@@ -151,7 +151,6 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 		                        key=lambda x: (x[2], np.size(x[1])), 
 		                        reverse=True)[:min(num_sentences, len(sentences_with_top_words))]
 		output_sents = list(set([sent[0] for sent in best_sentences]))
-		print "{:.1f}%".format(prospect_to_prob[prosp]*100.0)
 		sorted_sims_out.append((prosp, tup[1], find_similar_players(prosp, tup[2]), prospect_to_image[prosp], 
 			"{:.1f}%".format(prospect_to_prob[prosp]*100.0), bold_query(new_query, output_sents), 
 			"{} - ".format(sort_positions(prospect_to_position[prosp])), prospect_to_link[prosp], prospect_to_video[prosp]))
