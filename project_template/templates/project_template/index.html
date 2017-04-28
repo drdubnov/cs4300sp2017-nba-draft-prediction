@@ -19,7 +19,7 @@
         
         
         <form class="form-inline global-search" method='GET'>
-            <h4><b>Select tags and enter a text query to describe a certain prospect in the 2017 NBA Draft.</b></h4>
+            <h4><b>Select tags or enter a text query to describe a certain prospect in the 2017 NBA Draft.</b></h4>
             <br><br>
             <div class="tag-word-area">
                 <span class="tag-word" id="shooter" onclick="select_tag(event)"><h5>Shooter</h5></span>
@@ -78,7 +78,7 @@
                     </div></a>
                     <div class="player-row-content">
                         <div class="player-row-subcontent">
-                            <h5><b>Query Score:</b></h5>
+                            <h5><b>Prob. of NBA Success:</b></h5>
                             <br>
                             <h4 id="q-score">{{line.4}}</h4>
                         </div>
@@ -96,7 +96,7 @@
                     </div>
                 </div>
                 <!-- Embedded YouTube player -->
-                <iframe width="300" height="185" src="https://www.youtube.com/embed/iH5wOMgYEuM?ecver=1" allowfullscreen></iframe>
+                <iframe width="300" height="185" src="{{line.7}}" allowfullscreen></iframe>
                 <br>
                 <div class="quote-row" id="quote-{{forloop.counter}}">
                     <h4 style="margin-top:0px;"><b>Quotes about {{line.0}}:</b></h4>
