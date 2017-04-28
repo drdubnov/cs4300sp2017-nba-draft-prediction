@@ -1,2 +1,4 @@
 vagrant/.vagrant
 vagrant/a4keypair.pem
+project_template/*.pyc
+project_template/migrations/*.pyc
