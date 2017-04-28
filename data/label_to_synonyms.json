@@ -1,10 +1,13 @@
 {"passer": ["distributor", "playmaker", "passing", "playmaking", "facilitator"], 
-"shooter": ["marksman", "sniper", "deadly"], 
+"shooter": ["marksman", "sniper"], 
 "driver": ["slasher", "cutter"], 
-"athletic": ["freak", "freakishly", "specimen", "explosive", "athleticism"],
+"athletic": ["freak", "freakishly", "specimen", "explosive", "athleticism", "freakish"],
 "leader": ["captain", "leadership"],
 "smart": ["intelligent"],
-"quick": ["quickness"],
-"skilled": ["gifted"],
+"quick": ["quickness", "lightning", "speed"],
+"skillful": ["gifted", "skilled"],
 "flashy": ["fancy", "cute"],
-"physicality": ["physical", "specimen"]}
+"physicality": ["physical", "specimen"],
+"dunker": ["dunk", "dunks"],
+"potential": ["upside", "untapped"],
+"defender": ["defense"]}
