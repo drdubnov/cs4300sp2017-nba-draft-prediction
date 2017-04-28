@@ -69,6 +69,8 @@
             <h5><b>Current Search: </b><i>{{search}}</i></h5><br><br>
             <br>
             {% for line in output %}
+                <h4 style="width:100%"><b>Query Score: {{line.1}}</b></h4>
+                <br>
                 <div class="player-row">
                     <div class="player-row-image">
                         <img src="/static/images/player_images/{{line.3}}" class="result-image" >
