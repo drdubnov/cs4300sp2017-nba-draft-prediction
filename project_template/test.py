@@ -23,7 +23,6 @@ ind_to_player = json.load(open(os.path.join(BASE_DIR, "data", "ind_to_player.jso
 prospect_to_image = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_image.json")))
 prospect_to_video = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_video.json")))
 prospect_to_link = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_link.json")))
-player_to_link = json.load(open(os.path.join(BASE_DIR, "data", "player_to_link.json")))
 prospect_to_prob = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_prob.json")))
 prospect_to_sentences = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_sents.json")))
 tfidf2 = pickle.load(open(os.path.join(BASE_DIR, "data", 'model2.pkl')))
@@ -53,7 +52,7 @@ def find_similar_players(prospect_name, tfidf_vector, k=3):
 			if not np.all(transformed == 0.0):
 				dotted = np.dot(transformed, tfidf_vector)	
 				sim = dotted/(np.linalg.norm(transformed)*np.linalg.norm(tfidf_vector))
-				sims.append((player, "{:.3f}".format(sim), player_to_link[player]))
+				sims.append((player, "{:.3f}".format(sim)))
 	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
 	return sorted_sims[:k]
 
@@ -203,8 +202,7 @@ def find_similar_old(q, pos, version, num_keywords=5, num_sentences=3):
 						sims.append((prosp, "{:.3f}".format(sim), find_similar_players_old(ind), prosp_image, "", [], ""))
 					elif int(version) == 2:
 						sims.append((prosp, "{:.3f}".format(sim), find_similar_players_old(ind), prosp_image, 
-							"Probability of NBA Success: {:.3f}".format(prospect_to_prob[prosp]), 
-							output_sents, "{} - ".format("/".join(position))))
+							"{:.1f}%".format(prospect_to_prob[prosp]*100.0), output_sents, "{} - ".format("/".join(position))))
 	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)
 	return sorted_sims
 
