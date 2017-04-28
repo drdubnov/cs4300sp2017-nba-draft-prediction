@@ -186,6 +186,12 @@ h1, h2, h3, h4, h5, h6, p {
 	color: white;
 }
 
+.video-player {
+    width: 30%;
+    height: 200px;
+    padding: 7px 10px;
+}
+
 .tag-word-area {
 	width: 50%;
     padding-bottom: 20px;
@@ -238,7 +244,7 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 /* Smaller screen sizes */
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1100px) {
     .project-name {
     	font-size: 32px;
     }
@@ -265,5 +271,18 @@ h1, h2, h3, h4, h5, h6, p {
 
     .quote-row {
     	width: 75%;
+    }
+
+    .video-player {
+        width: 35%;
+        height: 200px;
+        float: left;
+        margin-left: 12%
+    }
+
+    .quote-row {
+        float: right;
+        width: 40%;
+        margin-right: 10%;
     }
 }
