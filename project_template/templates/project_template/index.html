@@ -223,14 +223,17 @@
         if (version == "1") {
             $(".tag-word-area").hide();
             $("#click-on-red").hide();
+            $(".video-player").hide();
 
         } else if (version == "2") {
             $(".tag-word-area").show();
             $("#click-on-red").show();
+            $(".video-player").hide();
 
         } else {
             $(".tag-word-area").show();
             $("#click-on-red").hide();
+            $(".video-player").show();
         }
     });
 
