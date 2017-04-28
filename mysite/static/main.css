@@ -60,7 +60,6 @@ h1, h2, h3, h4, h5, h6, p {
     text-shadow: 1px 1px 1px #cccccc;
     font-size: 48px;
     color: #006BB7;
-    overflow-x: none; 
 }
 
 .team-members {
@@ -104,7 +103,7 @@ h1, h2, h3, h4, h5, h6, p {
 .player-row-name {
     width: 100%;
     padding: 10px;
-    background: linear-gradient(to bottom, red 13%, blue 165%);
+    background: linear-gradient(to bottom, red 13%, #006BB7 165%);
     box-shadow: 0px 2px 10px darkblue;
 }
 
@@ -151,9 +150,9 @@ h1, h2, h3, h4, h5, h6, p {
 
 .player-row-features {
     width: 50%;
-    height: 30px;
+    height: 32px;
     background-color: #006BB7;
-    border: 1px solid darkgray;
+    border: 1px solid darkblue;
 }
 
 .player-row-features h5 {
@@ -189,6 +188,7 @@ h1, h2, h3, h4, h5, h6, p {
 
 .tag-word-area {
 	width: 50%;
+    padding-bottom: 20px;
 }
 
 .tag-word {
@@ -231,6 +231,10 @@ h1, h2, h3, h4, h5, h6, p {
 	background-color: #ED174B;
 	color: white;
 	cursor: pointer;
+}
+
+#syn-box {
+    display: none;
 }
 
 /* Smaller screen sizes */
