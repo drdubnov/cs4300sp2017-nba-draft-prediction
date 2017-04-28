@@ -5,7 +5,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 import pickle
 import nltk
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import time
 import re
 
@@ -97,33 +96,26 @@ def sort_positions(pos):
 
 
 def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
-	start = time.time()
+	# transform query with synonyms added to it
 	new_query = query.lower().split()
 	for word in query.split():
 		word = word.lower()
 		if word in label_to_synonyms:
 			new_query.extend(label_to_synonyms[word])
 	transformed = tfidf2.transform([" ".join(new_query)]).toarray().flatten()
-	if np.all(transformed == 0.0):
-		return ["Query is out of vocabulary"]
+
+	#find similarity between query and each player's docs
 	sims = []
-	for prosp, sents in prospect_to_sentences.items():
+	for prosp, doc in prospect_to_sent_docs.items():
 		position = prospect_to_position[prosp]
 		if pos == "any" or pos.upper() in position:
-			total_doc = np.zeros(len(tfidf2.get_feature_names()))
-			total_doc = np.array(prospect_to_sent_docs[prosp])
-			#doc = prospect_to_docs[prosp]
-			#total_doc = tfidf2.transform([doc]).toarray().flatten()
-			# for sentence in sents:
-			# 	t_doc = tfidf2.transform([sentence]).toarray().flatten()
-			# 	if not np.all(t_doc == 0.0):
-			# 		#ss = sid.polarity_scores(sentence.lower())
-			# 		#total_doc += t_doc*np.exp(-ss["neg"])
-			# 		total_doc += t_doc
-			if not np.all(total_doc == 0):
-				sim = np.dot(total_doc, transformed)/(np.linalg.norm(total_doc)*np.linalg.norm(transformed))
-				if sim != 0:
-					sims.append((prosp, "{:.3f}".format(sim), total_doc))
+			total_doc = np.array(doc)
+			dotted = np.dot(total_doc, transformed)
+			if dotted > 0:
+				sim = dotted/(np.linalg.norm(total_doc)*np.linalg.norm(transformed))
+				sims.append((prosp, "{:.3f}".format(sim), total_doc))
+				
+	#for most similar outputs, find relevant sentences
 	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)[:min(10, len(sims))]
 	sorted_sims_out = []
 	for tup in sorted_sims:
@@ -156,10 +148,10 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 		                        key=lambda x: (x[2], np.size(x[1])), 
 		                        reverse=True)[:min(num_sentences, len(sentences_with_top_words))]
 		output_sents = list(set([sent[0] for sent in best_sentences]))
+		print "{:.1f}%".format(prospect_to_prob[prosp]*100.0)
 		sorted_sims_out.append((prosp, tup[1], find_similar_players(prosp, tup[2]), prospect_to_image[prosp], 
-			"Probability of NBA Success: {:.3f}".format(prospect_to_prob[prosp]), bold_query(new_query, output_sents), 
+			"{:.1f}%".format(prospect_to_prob[prosp]*100.0), bold_query(new_query, output_sents), 
 			"{} - ".format(sort_positions(prospect_to_position[prosp])), prospect_to_link[prosp]))
-	print(time.time() - start)
 	return sorted_sims_out
 
 
@@ -215,7 +207,7 @@ def find_similar_old(q, pos, version, num_keywords=5, num_sentences=3):
 	return sorted_sims
 
 
-def find_similar(query, pos, version, num_keywords=5, num_sentences=3):
+def find_similar(query, pos, version):
 	if int(version) == 3:
 		return find_similar_new(query, pos)
 	else:
