@@ -21,6 +21,7 @@ ind_to_prospect = json.load(open(os.path.join(BASE_DIR, "data", "ind_to_prospect
 ind_to_player = json.load(open(os.path.join(BASE_DIR, "data", "ind_to_player.json")))
 
 prospect_to_image = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_image.json")))
+prospect_to_video = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_video.json")))
 prospect_to_link = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_link.json")))
 player_to_link = json.load(open(os.path.join(BASE_DIR, "data", "player_to_link.json")))
 prospect_to_prob = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_prob.json")))
@@ -38,6 +39,8 @@ for p in prospect_to_sentences.keys():
 		print p, "image"
 	if p not in prospect_to_prob:
 		print p, "prob"
+	if p not in prospect_to_video:
+		print p, "video"
 
 
 def find_similar_players(prospect_name, tfidf_vector, k=3):
@@ -151,7 +154,7 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 		print "{:.1f}%".format(prospect_to_prob[prosp]*100.0)
 		sorted_sims_out.append((prosp, tup[1], find_similar_players(prosp, tup[2]), prospect_to_image[prosp], 
 			"{:.1f}%".format(prospect_to_prob[prosp]*100.0), bold_query(new_query, output_sents), 
-			"{} - ".format(sort_positions(prospect_to_position[prosp])), prospect_to_link[prosp]))
+			"{} - ".format(sort_positions(prospect_to_position[prosp])), prospect_to_link[prosp], prospect_to_video[prosp]))
 	return sorted_sims_out
 
 
