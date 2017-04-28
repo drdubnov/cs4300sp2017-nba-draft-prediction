@@ -121,7 +121,8 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 			# 		total_doc += t_doc
 			if not np.all(total_doc == 0):
 				sim = np.dot(total_doc, transformed)/(np.linalg.norm(total_doc)*np.linalg.norm(transformed))
-				sims.append((prosp, "{:.3f}".format(sim), total_doc))
+				if sim != 0:
+					sims.append((prosp, "{:.3f}".format(sim), total_doc))
 	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)[:min(10, len(sims))]
 	sorted_sims_out = []
 	for tup in sorted_sims:

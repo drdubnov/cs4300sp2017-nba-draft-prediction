@@ -1,1 +1,10 @@
-{"passer": ["distributor", "playmaker", "passing", "playmaking", "facilitator"], "shooter": ["marksman", "sniper"], "driver": ["slasher", "cutter"]}
+{"passer": ["distributor", "playmaker", "passing", "playmaking", "facilitator"], 
+"shooter": ["marksman", "sniper", "deadly"], 
+"driver": ["slasher", "cutter"], 
+"athletic": ["freak", "freakishly", "specimen", "explosive", "athleticism"],
+"leader": ["captain", "leadership"],
+"smart": ["intelligent"],
+"quick": ["quickness"],
+"skilled": ["gifted"],
+"flashy": ["fancy", "cute"],
+"physicality": ["physical", "specimen"]}
