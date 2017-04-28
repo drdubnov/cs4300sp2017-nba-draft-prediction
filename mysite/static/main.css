@@ -78,7 +78,7 @@ h1, h2, h3, h4, h5, h6, p {
     width: 60%;
     margin: 10px;
     box-shadow: 5px 5px 5px #888888;
-    height: 200px;
+    height: 215px;
 }
 
 .player-row h3 {
@@ -122,7 +122,7 @@ h1, h2, h3, h4, h5, h6, p {
 
 .player-row-content {
 	width: 50%;
-    padding: 12px 0px;
+    padding: 20px 0px;
 }
 
 .player-row-content h6 {
@@ -150,7 +150,7 @@ h1, h2, h3, h4, h5, h6, p {
 
 .player-row-features {
     width: 50%;
-    height: 32px;
+    height: 30px;
     background-color: #006BB7;
     border: 1px solid darkblue;
 }
@@ -275,7 +275,7 @@ h1, h2, h3, h4, h5, h6, p {
 
     .video-player {
         width: 35%;
-        height: 200px;
+        height: 215px;
         float: left;
         margin-left: 12%
     }
