@@ -40,6 +40,8 @@
                 <span class="tag-word" id="skillful" onclick="select_tag(event)"><h5>Skillful</h5></span>
                 <span class="tag-word" id="flashy" onclick="select_tag(event)"><h5>Flashy</h5></span>
                 <span class="tag-word" id="potential" onclick="select_tag(event)"><h5>Potential</h5></span>
+                <br>
+                <span id="syn-box">Synonyms:</span>
             </div>
             <br><br>
             
@@ -78,7 +80,7 @@
                         <div class="player-row-subcontent">
                             <h5><b>Query Score:</b></h5>
                             <br>
-                            <h4 id="q-score">{{line.1}}</h4>
+                            <h4 id="q-score">{{line.4}}</h4>
                         </div>
                         <div class="player-row-subcontent">
                             <h5><b>Similar NBA Players:</b></h5>
@@ -225,7 +227,46 @@
             $(".tag-word-area").show();
             $("#click-on-red").hide();
         }
-    })
+    });
+
+    // Show synonyms
+    $(".tag-word").mouseover(function(event) {
+        var hoverLabel = event["currentTarget"]["id"];
+        var synJson = {"shooter": ["marksman", "sniper", "deadly"], 
+                "scorer": ["points"],
+                "driver": ["slasher", "cutter", "finishing"],
+                "dunker": ["finisher", "flying"], 
+                "passer": ["distributor", "playmaker", "passing", "playmaking", "facilitator"],
+                "rebounder": ["boards", "crash"],
+                "defender": ["lockdown", "stopper"],
+                "bigman": ["tall", "strong"],
+                "physicality": ["physical", "specimen"],
+                "shotblocker": ["protection", "stopper"],
+                "athletic": ["freak", "freakishly", "specimen", "explosive", "athleticism"],
+                "quick": ["quickness", "speedy", "agile"],
+                "leader": ["captain", "leadership"],
+                "length": ["wingspan", "tall"],
+                "smart": ["intelligent"],
+                "skillful": ["gifted", "talented"],
+                "flashy": ["fancy", "cute"],
+                "potential": ["growth", "improvement"]};
+
+        var theseSyn = synJson[hoverLabel];
+        var outputText = "<b>Label synonyms:</b> ";
+        for (syn in theseSyn) {
+            var thisSyn = theseSyn[syn];
+            outputText = outputText + thisSyn + ", "
+        }
+
+        $("#syn-box").html(outputText.slice(0,-2));
+        $("#syn-box").css("display", "initial");
+        $(".tag-word-area").css("padding-bottom", "0px")
+    });
+
+    $(".tag-word").mouseout(function(event) {
+        $("#syn-box").css("display", "none");
+        $(".tag-word-area").css("padding-bottom", "20px")
+    });
 
     </script>
 
