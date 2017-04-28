@@ -95,8 +95,10 @@
                         <h5>Show quotes about {{line.0}}</h5>
                     </div>
                 </div>
+                <div class="video-player">
+                    <iframe width="100%" height="100%" src="{{line.8}}" allowfullscreen></iframe>
+                </div>
                 <!-- Embedded YouTube player -->
-                <iframe width="300" height="185" src="{{line.7}}" allowfullscreen></iframe>
                 <br>
                 <div class="quote-row" id="quote-{{forloop.counter}}">
                     <h4 style="margin-top:0px;"><b>Quotes about {{line.0}}:</b></h4>
@@ -223,6 +225,7 @@
         } else if (version == "2") {
             $(".tag-word-area").show();
             $("#click-on-red").show();
+
         } else {
             $(".tag-word-area").show();
             $("#click-on-red").hide();
