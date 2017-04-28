@@ -4,6 +4,7 @@
         <link rel="stylesheet" href="/static/main.css">
         <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
         <script type="text/javascript" src="/static/jquery.min.js"></script>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
     </head>
     
     <body>
@@ -64,30 +65,40 @@
         <div class="form-inline global-search">
             <h4>{{pos}}</h4><br>
             <h5>Current Search: <i>{{search}}</i></h5><br><br>
-            <h4 id="click-on-red">Click on red player card to show quotes:</h4>
             <br>
             {% for line in output %}
-                <div class="player-row" onclick="expandPlayer(event)" id="{{forloop.counter}}">
+                <div class="player-row">
                     <div class="player-row-image">
                         <img src="/static/images/player_images/{{line.3}}" class="result-image" >
                     </div>
+                    <a href="{{line.7}}" target="_blank"><div class="player-row-name">
+                        <h3><b>{{line.6}}{{line.0}}</b></h3>
+                    </div></a>
                     <div class="player-row-content">
-                        <h3>{{line.6}}{{line.0}}</h3>
-                        <br>
-                        <h5>{{line.4}}</h5>
-                        <br>
-                        Query Score: {{line.1}}
-                        <br>
-                        <h5><b>Similar NBA Players:</b></h5>
-                        <br>
-                        {% for simplayer in line.2 %}
-                            {{simplayer.0}} - {{simplayer.1}}
+                        <div class="player-row-subcontent">
+                            <h5><b>Query Score:</b></h5>
                             <br>
-                        {% endfor %}
+                            <h4 id="q-score">{{line.1}}</h4>
+                        </div>
+                        <div class="player-row-subcontent">
+                            <h5><b>Similar NBA Players:</b></h5>
+                            <br>
+                            {% for simplayer in line.2 %}
+                                {{simplayer.0}} - {{simplayer.1}}
+                                <br>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="player-row-features" onclick="expandPlayer(event)" id="{{forloop.counter}}">
+                        <h5>Show quotes about {{line.0}}</h5>
                     </div>
                 </div>
+                <!-- Embedded YouTube player -->
+                <iframe width="300" height="185" src="https://www.youtube.com/embed/w4wMPaZPfrM"></iframe>
                 <br>
                 <div class="quote-row" id="quote-{{forloop.counter}}">
+                    <h4 style="margin-top:0px;"><b>Quotes about {{line.0}}:</b></h4>
+                    <br>
                     {% for quote in line.5 %}
                         <h5>"{{quote|safe}}"</h5>
                         <br>
@@ -101,12 +112,13 @@
 
     <script type="text/javascript">
     function select_tag(event) {
-        var selectedClass = event["path"][1]["className"];
-        var selectedText = event["path"][1]["innerText"].toLowerCase();
-        var thisId = event["path"][1]["id"];
-        if (selectedClass == "tag-word") {
-            $("#" + thisId).css("background-color", "#31B0D5");
-            $("#" + thisId).css("color", "white");
+        var selectedClass = event["path"][0]["className"];
+        var selectedClass2 = event["path"][1]["className"];
+        var selectedText = event["path"][0]["innerText"].toLowerCase();
+        var thisId1 = event["path"][0]["id"];
+        var thisId2 = event["path"][1]["id"];
+        var thisId = thisId1 + thisId2;
+        if (selectedClass == "tag-word" || selectedClass2 == "tag-word") {
             $("#" + thisId).attr('class', 'tag-selected');
             if ($("#input").val() == "") {
                 $("#input").val($("#input").val() + selectedText);
@@ -114,24 +126,21 @@
             else {
                 $("#input").val($("#input").val() + " " + selectedText);
             }
-        } else if (selectedClass == "tag-selected") {
+        } else if (selectedClass == "tag-selected" || selectedClass2 == "tag-selected") {
             var inputTokens = $("#input").val().split(" ")
-            if (inputTokens[0] == selectedText) {
+            var twoWordCheck = inputTokens[0] + " " + inputTokens[1];
+            if (inputTokens[0] == selectedText || twoWordCheck == "shot blocker" || twoWordCheck == "big man") {
                 $("#input").val($("#input").val().replace(selectedText, ""));
-                $("#" + thisId).css("background-color", "white");
-                $("#" + thisId).css("color", "black");
                 $("#" + thisId).attr('class', 'tag-word');
             } else {
                 $("#input").val($("#input").val().replace(" " + selectedText, ""));
-                $("#" + thisId).css("background-color", "white");
-                $("#" + thisId).css("color", "black");
                 $("#" + thisId).attr('class', 'tag-word');
             }
         }
     };
 
     function checkText(event) {
-        var inputText = $("#input").val();
+        var inputText = $("#input").val().toLowerCase();
         var tokenListLarge = inputText.split(" ");
         // Make all tokens lowercase
         var tokenList = []
@@ -159,11 +168,9 @@
                 var thisIndex = labelList.indexOf(smallToken);
                 var thisLabel = labelList[thisIndex];
                 if (thisLabel == "shot blocker" || thisLabel == "big man") {
-                    thisLabel = thisLabel.replace(" ", "")
+                    thisLabel = thisLabel.replace(" ", "");
                 }
                 $("#" + thisLabel).attr('class', 'tag-selected');
-                $("#" + thisLabel).css("background-color", "#31B0D5");
-                $("#" + thisLabel).css("color", "white");
             } 
         }
         var selectedList = [];
@@ -172,22 +179,29 @@
         })
         for (s_item in selectedList) {
             var checkId = selectedList[s_item];
+            if (checkId == "shotblocker") {
+                if (inputText.indexOf("shot blocker") >= 0) {
+                    inputText = inputText.replace("shot blocker", "shotblocker");
+                }
+            }
+            if (checkId == "bigman") {
+                if (inputText.indexOf("big man") >= 0) {
+                    inputText = inputText.replace("big man", "bigman");
+                }
+            }
             if (inputText.includes(checkId)) {
                 continue;
             }
             else {
-                if (checkId == "shot blocker" || checkId == "big man") {
-                    checkId = checkId.replace(" ", "")
-                }
                 $("#" + checkId).attr('class', 'tag-word');
-                $("#" + checkId).css("background-color", "white");
-                $("#" + checkId).css("color", "black");
             }
         }
     };
 
     function expandPlayer(event) {
-        var id = event["path"][1]["id"];
+        var id1 = event["srcElement"]["id"];
+        var id2 = event["path"][1]["id"];
+        var id = id1 + id2;
         var currentDisplay = $("#quote-" + id).css("display");
         if (currentDisplay == "none") {
             $("#quote-" + id).css("display","inline-block");
@@ -200,14 +214,16 @@
     // Change what is seen with version change
     $("#version-selection").change(function() {
         var version = $("#version-selection").val();
-        console.log(version)
         if (version == "1") {
             $(".tag-word-area").hide();
             $("#click-on-red").hide();
 
-        } else if (version == "2" || version == "3") {
+        } else if (version == "2") {
             $(".tag-word-area").show();
             $("#click-on-red").show();
+        } else {
+            $(".tag-word-area").show();
+            $("#click-on-red").hide();
         }
     })
 

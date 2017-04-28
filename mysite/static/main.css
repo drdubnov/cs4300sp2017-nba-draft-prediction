@@ -75,28 +75,25 @@ h1, h2, h3, h4, h5, h6, p {
 .player-row {
 	background-color: #ED174B;
 	color: white;
-    border: 2px solid blue;
+    border: 2px solid darkblue;
     width: 60%;
     margin: 10px;
     box-shadow: 5px 5px 5px #888888;
     height: 200px;
 }
 
-.player-row:hover {
-	cursor: pointer;
-}
-
-.player-row:active {
-	box-shadow: 1px 1px 1px #888888;
-}
-
 .player-row h3 {
 	margin-top: 0px;
+}
+
+.player-row a {
+    width: 50%;
 }
 
 .player-row-image {
 	float: left;
     width: 50%;
+    border-right: 2px solid darkblue;
 }
 
 .result-image {
@@ -104,9 +101,72 @@ h1, h2, h3, h4, h5, h6, p {
 	height: 100%;
 }
 
+.player-row-name {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(to bottom, red 13%, blue 165%);
+    box-shadow: 0px 2px 10px darkblue;
+}
+
+.player-row-name:hover {
+    background: linear-gradient(to bottom, red 13%, white 185%);
+}
+
+.player-row-name:active {
+    background: linear-gradient(to bottom, red 30%, white 165%);
+    box-shadow: 0px 1px 1px darkblue;
+}
+
+.player-row-name h3 {
+    color: white;
+}
+
 .player-row-content {
-	padding: 20px;
 	width: 50%;
+    padding: 12px 0px;
+}
+
+.player-row-content h6 {
+    margin-top: 3px;
+}
+
+.player-row-subcontent {
+    width: 49%;
+    vertical-align: middle;
+}
+
+.player-row-subcontent h5 {
+    margin-top: 0px;
+}
+
+#q-score {
+    background-color: #006BB7;
+    border-radius: 100px;
+    border: 2px solid darkblue;
+    height: 70px;
+    width: 70px;
+    padding-top: 25px;
+    margin-top: 5px;
+}
+
+.player-row-features {
+    width: 50%;
+    height: 30px;
+    background-color: #006BB7;
+    border: 1px solid darkgray;
+}
+
+.player-row-features h5 {
+    margin-top: 7px;
+}
+
+.player-row-features:hover {
+    cursor: pointer;
+    background-color: indigo;
+}
+
+.player-row-features:active {
+    box-shadow: 0px 0px 5px darkblue;
 }
 
 .quote-row {
@@ -132,10 +192,14 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .tag-word {
-	padding: 4px;
     border: 1px solid #cccccc;
     border-radius: 10px;
     margin: 10px;
+    display: inline-block;
+    padding: 7px;
+    width: 101px;
+    background-color: white;
+    color: black;
 }
 
 .tag-word h5 {
@@ -149,10 +213,14 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .tag-selected {
-	padding: 4px;
-    border: 1px solid #cccccc;
+	border: 1px solid #cccccc;
     border-radius: 10px;
     margin: 10px;
+    display: inline-block;
+    padding: 7px;
+    width: 101px;
+    background-color: #31B0D5;
+    color: white;
 }
 
 .tag-selected h5 {
