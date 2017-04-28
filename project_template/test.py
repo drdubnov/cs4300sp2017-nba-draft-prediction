@@ -98,8 +98,9 @@ def sort_positions(pos):
 
 def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 	start = time.time()
-	new_query = query.split()
+	new_query = query.lower().split()
 	for word in query.split():
+		word = word.lower()
 		if word in label_to_synonyms:
 			new_query.extend(label_to_synonyms[word])
 	transformed = tfidf2.transform([" ".join(new_query)]).toarray().flatten()

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {"shooter": ["marksman", "sniper", "deadly"], 
 "scorer": ["points"],
 "driver": ["slasher", "cutter", "finishing"],
@@ -10,9 +11,25 @@
 "shotblocker": ["protection", "stopper"],
 "athletic": ["freak", "freakishly", "specimen", "explosive", "athleticism"],
 "quick": ["quickness", "speedy", "agile"],
+=======
+{"passer": ["distributor", "playmaker", "passing", "playmaking", "facilitator"], 
+"shooter": ["marksman", "sniper"], 
+"driver": ["slasher", "cutter"], 
+"athletic": ["freak", "freakishly", "specimen", "explosive", "athleticism", "freakish"],
+>>>>>>> ad7b32abab523bde1a73fe9d8044964b51fafbe2
 "leader": ["captain", "leadership"],
 "length": ["wingspan", "tall"],
 "smart": ["intelligent"],
+<<<<<<< HEAD
 "skillful": ["gifted", "talented"],
 "flashy": ["fancy", "cute"],
 "potential": ["growth", "improvement"]}
+=======
+"quick": ["quickness", "lightning", "speed"],
+"skillful": ["gifted", "skilled"],
+"flashy": ["fancy", "cute"],
+"physicality": ["physical", "specimen"],
+"dunker": ["dunk", "dunks"],
+"potential": ["upside", "untapped"],
+"defender": ["defense"]}
+>>>>>>> ad7b32abab523bde1a73fe9d8044964b51fafbe2
