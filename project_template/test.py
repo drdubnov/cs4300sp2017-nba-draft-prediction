@@ -104,6 +104,8 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 		word = word.lower()
 		if word in label_to_synonyms:
 			new_query.extend(label_to_synonyms[word])
+	if "shot blocker" in query:
+		new_query.extend(label_to_synonyms["shotblocker"])
 	transformed = tfidf2.transform([" ".join(new_query)]).toarray().flatten()
 
 	#find similarity between query and each player's docs
