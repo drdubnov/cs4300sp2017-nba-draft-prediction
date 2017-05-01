@@ -241,24 +241,24 @@
     // Show synonyms
     $(".tag-word").mouseover(function(event) {
         var hoverLabel = event["currentTarget"]["id"];
-        var synJson = {"shooter": ["marksman", "sniper"], 
-                "scorer": ["buckets"],
-                "driver": ["slasher", "cutter"],
-                "dunker": ["dunks", "dunk"], 
-                "passer": ["distributor", "playmaker", "passing", "playmaking", "facilitator", "mover", "ballmover"],
-                "rebounder": ["boards", "crash"],
-                "defender": ["lockdown", "stopper"],
-                "bigman": ["tall", "strong"],
-                "physicality": ["physical", "specimen"],
-                "shotblocker": ["protection", "stopper"],
+        var synJson = {"shooter": ["marksman", "sniper", "deadly"],
+                "scorer": ["points", "offensive","buckets"],
+                "driver": ["slasher", "cutter", "finishin", "rim"],
+                "dunker": ["finisher", "flying", "paint", "dunks"], 
+                "passer": ["distributor", "playmaker", "passing", "playmaking", "facilitator", "ballmover", "mover"],
+                "rebounder": ["boards", "crash", "box out", "glass"]],
+                "defender": ["lockdown", "stopper", "protector"],
+                "bigman": ["tall", "strong", "imposing"],
+                "physicality": ["physical", "specimen", "strength"],
+                "shotblocker": ["protection", "stopper", "blocks"],
                 "athletic": ["freak", "freakishly", "specimen", "explosive", "athleticism"],
-                "quick": ["quickness", "speedy", "agile", "speed"],
-                "leader": ["captain", "leadership"],
-                "length": ["wingspan"],
-                "smart": ["intelligent", "clever"],
-                "skillful": ["gifted", "talented", "skilled"],
-                "flashy": ["fancy", "cute"],
-                "potential": ["growth", "improvement", "improvements"]};
+                "quick": ["quickness", "speedy", "agile", "speed", "explosive"],
+                "leader": ["captain", "leadership", "general"],
+                "length": ["wingspan", "tall", "lanky"],
+                "smart": ["intelligent", "clever", "decision", "smarts"],
+                "skillful": ["gifted", "talented", "skilled", "proficient"],
+                "flashy": ["fancy", "cute", "homerun", "shine"],
+                "potential": ["growth", "improvement", "improvements", "developing", "interesting"]};
 
         var theseSyn = synJson[hoverLabel];
         var outputText = "<b>Label synonyms:</b> ";
