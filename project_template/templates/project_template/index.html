@@ -69,7 +69,7 @@
             <h5><b>Current Search: </b><i>{{search}}</i></h5><br><br>
             <br>
             {% for line in output %}
-                <h4 style="width:100%"><b>Query Similarity: {{line.1}}</b></h4>
+                <h4 style="width:100%"><b>Query Score: {{line.1}}</b></h4>
                 <br>
                 <div class="player-row">
                     <div class="player-row-image">
@@ -246,19 +246,19 @@
                 "driver": ["slasher", "cutter"],
                 "dunker": ["dunks", "dunk"], 
                 "passer": ["distributor", "playmaker", "passing", "playmaking", "facilitator", "mover", "ballmover"],
-                "rebounder": ["boards", "crash"],
-                "defender": ["lockdown", "stopper"],
+                "rebounder": ["boards", "crash", "glass"],
+                "defender": ["lockdown", "stopper", "protector"],
                 "bigman": ["tall", "strong"],
-                "physicality": ["physical", "specimen"],
+                "physicality": ["physical", "specimen", "strength"],
                 "shotblocker": ["protection", "stopper"],
                 "athletic": ["freak", "freakishly", "specimen", "explosive", "athleticism"],
                 "quick": ["quickness", "speedy", "agile", "speed"],
-                "leader": ["captain", "leadership"],
-                "length": ["wingspan"],
-                "smart": ["intelligent", "clever"],
+                "leader": ["captain", "leadership", "general"],
+                "length": ["wingspan", "lanky"],
+                "smart": ["intelligent", "clever", "smarts"],
                 "skillful": ["gifted", "talented", "skilled"],
-                "flashy": ["fancy", "cute"],
-                "potential": ["growth", "improvement", "improvements"]};
+                "flashy": ["fancy", "cute", "homerun"],
+                "potential": ["growth", "improvement", "improvements", "developing"]};
 
         var theseSyn = synJson[hoverLabel];
         var outputText = "<b>Label synonyms:</b> ";

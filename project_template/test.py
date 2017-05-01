@@ -117,10 +117,11 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 			dotted = np.dot(total_doc, transformed)
 			if dotted > 0:
 				sim = dotted/(np.linalg.norm(total_doc)*np.linalg.norm(transformed))
-				sims.append((prosp, "{:.3f}".format(sim), total_doc))
+				print np.count_nonzero(np.multiply(total_doc, transformed))/float(len(new_query))
+				sims.append((prosp, "{:.3f}".format(sim), total_doc, np.count_nonzero(np.multiply(total_doc, transformed))/float(len(new_query))))
 				
 	#for most similar outputs, find relevant sentences
-	sorted_sims = sorted(sims, key=lambda x:x[1], reverse=True)[:min(10, len(sims))]
+	sorted_sims = sorted(sims, key=lambda x:(x[3], x[1]), reverse=True)[:min(10, len(sims))]
 	sorted_sims_out = []
 	for tup in sorted_sims:
 		prosp = tup[0]
@@ -152,7 +153,7 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 		                        key=lambda x: (x[2], np.size(x[1])), 
 		                        reverse=True)[:min(num_sentences, len(sentences_with_top_words))]
 		output_sents = list(set([sent[0] for sent in best_sentences]))
-		sorted_sims_out.append((prosp, tup[1], find_similar_players(prosp, tup[2]), prospect_to_image[prosp], 
+		sorted_sims_out.append((prosp, "{:.2f}".format(tup[3]), find_similar_players(prosp, tup[2]), prospect_to_image[prosp], 
 			"{:.1f}%".format(prospect_to_prob[prosp]*100.0), bold_query(new_query, output_sents), 
 			"{} - ".format(sort_positions(prospect_to_position[prosp])), prospect_to_link[prosp], prospect_to_video[prosp]))
 	return sorted_sims_out
