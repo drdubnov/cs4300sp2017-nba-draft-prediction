@@ -2,7 +2,7 @@
 "scorer": ["buckets"],
 "driver": ["slasher", "cutter"],
 "dunker": ["dunks", "dunk"], 
-"passer": ["distributor", "playmaker", "passing", "playmaking", "facilitator", "ballmover", "mover"],
+"passer": ["distributor", "playmaker", "passing", "playmaking", "facilitator", "ballmover"],
 "rebounder": ["boards", "crash", "glass"],
 "defender": ["lockdown", "stopper", "protector"],
 "bigman": ["tall", "strong"],
