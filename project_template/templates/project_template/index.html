@@ -242,23 +242,23 @@
     $(".tag-word").mouseover(function(event) {
         var hoverLabel = event["currentTarget"]["id"];
         var synJson = {"shooter": ["marksman", "sniper", "deadly"], 
-                "scorer": ["points"],
-                "driver": ["slasher", "cutter", "finishing"],
-                "dunker": ["finisher", "flying"], 
+                "scorer": ["points", "offensive", "buckets"],
+                "driver": ["slasher", "cutter", "finishing", "rim"],
+                "dunker": ["finisher", "flying", "paint"], 
                 "passer": ["distributor", "playmaker", "passing", "playmaking", "facilitator"],
-                "rebounder": ["boards", "crash"],
-                "defender": ["lockdown", "stopper"],
-                "bigman": ["tall", "strong"],
-                "physicality": ["physical", "specimen"],
-                "shotblocker": ["protection", "stopper"],
+                "rebounder": ["boards", "crash", "box out", "glass"],
+                "defender": ["lockdown", "stopper", "protector"],
+                "bigman": ["tall", "strong", "imposing"],
+                "physicality": ["physical", "specimen", "strength"],
+                "shotblocker": ["protector", "stopper", "blocks"],
                 "athletic": ["freak", "freakishly", "specimen", "explosive", "athleticism"],
-                "quick": ["quickness", "speedy", "agile"],
-                "leader": ["captain", "leadership"],
-                "length": ["wingspan", "tall"],
-                "smart": ["intelligent"],
-                "skillful": ["gifted", "talented"],
-                "flashy": ["fancy", "cute"],
-                "potential": ["growth", "improvement"]};
+                "quick": ["quickness", "speedy", "agile", "explosive"],
+                "leader": ["captain", "general", "leadership"],
+                "length": ["wingspan", "tall", "lanky"],
+                "smart": ["intelligent", "decision", "smarts"],
+                "skillful": ["gifted", "talented", "proficient"],
+                "flashy": ["fancy", "homerun", "shine"],
+                "potential": ["growth", "improvement", "developing", "interesting"]};
 
         var theseSyn = synJson[hoverLabel];
         var outputText = "<b>Label synonyms:</b> ";
