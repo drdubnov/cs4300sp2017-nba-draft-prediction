@@ -31,17 +31,6 @@ label_to_synonyms = json.load(open(os.path.join(BASE_DIR, "data", "label_to_syno
 prospect_to_sent_docs = json.load(open(os.path.join(BASE_DIR, "data", "prospect_to_sent_docs.json")))
 
 
-for p in prospect_to_sentences.keys():
-	if p not in prospect_to_link:
-		print p, "link"
-	if p not in prospect_to_image:
-		print p, "image"
-	if p not in prospect_to_prob:
-		print p, "prob"
-	if p not in prospect_to_video:
-		print p, "video"
-
-
 def find_similar_players(prospect_name, tfidf_vector, k=3):
 	prospect_position = prospect_to_position[prospect_name]
 	sims = []
@@ -117,7 +106,6 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 			dotted = np.dot(total_doc, transformed)
 			if dotted > 0:
 				sim = dotted/(np.linalg.norm(total_doc)*np.linalg.norm(transformed))
-				print np.count_nonzero(np.multiply(total_doc, transformed))/float(len(new_query))
 				sims.append((prosp, "{:.3f}".format(sim), total_doc, np.count_nonzero(np.multiply(total_doc, transformed))/float(len(new_query))))
 				
 	#for most similar outputs, find relevant sentences
