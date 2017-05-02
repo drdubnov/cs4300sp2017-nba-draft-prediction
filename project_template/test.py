@@ -86,7 +86,7 @@ def sort_positions(pos):
 	return "/".join(sorted_pos)
 
 
-def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
+def find_similar_new(query, pos, num_keywords=50, num_sentences=3):
 	# transform query with synonyms added to it
 	new_query = query.lower().split()
 	for word in query.split():
@@ -127,6 +127,7 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 				lambda matchobj: matchobj.group(1) + " " + matchobj.group(2), sentence)
 			tokens = nltk.word_tokenize(sentence.lower())
 			top_words_in_sentence = []
+			seen_sents = set()
 			for word in top_words:
 			    if word in tokens:
 					top_words_in_sentence.append(word)
@@ -134,20 +135,22 @@ def find_similar_new(query, pos, num_keywords=5, num_sentences=3):
 						sentence_tfidf = tfidf2.transform([sentence]).toarray().flatten()
 						sentence_cosine_sim = np.dot(transformed, 
 							sentence_tfidf) / (np.linalg.norm(transformed) * np.linalg.norm(sentence_tfidf))
-						sentences_with_top_words.append(sentence)
-						actual_top_words.append(top_words_in_sentence)
-						sentences_with_top_words_cosine_sim.append(sentence_cosine_sim)
+						if sentence not in seen_sents:
+							sentences_with_top_words.append(sentence)
+							actual_top_words.append(top_words_in_sentence)
+							sentences_with_top_words_cosine_sim.append(sentence_cosine_sim)
+							seen_sents.add(sentence)
 		best_sentences = sorted(zip(sentences_with_top_words, actual_top_words, sentences_with_top_words_cosine_sim), 
 		                        key=lambda x: (x[2], np.size(x[1])), 
 		                        reverse=True)[:min(num_sentences, len(sentences_with_top_words))]
-		output_sents = list(set([sent[0] for sent in best_sentences]))
+		output_sents = [sent[0] for sent in best_sentences]
 		sorted_sims_out.append((prosp, "{:.2f}".format(tup[3]), find_similar_players(prosp, tup[2]), prospect_to_image[prosp], 
 			"{:.1f}%".format(prospect_to_prob[prosp]*100.0), bold_query(new_query, output_sents), 
 			"{} - ".format(sort_positions(prospect_to_position[prosp])), prospect_to_link[prosp], prospect_to_video[prosp]))
 	return sorted_sims_out
 
 
-def find_similar_old(q, pos, version, num_keywords=5, num_sentences=3):
+def find_similar_old(q, pos, version, num_keywords=50, num_sentences=3):
 	transformed = tfidf.transform([q]).toarray().flatten()
 	if np.all(transformed == 0.0):
 		return ["Query is out of vocabulary"]
